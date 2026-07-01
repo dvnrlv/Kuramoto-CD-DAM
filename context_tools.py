@@ -18,6 +18,10 @@ def hebbian_learning(patterns):
 
 def generate_J(N, patterns):
 
+    #why fourth order? what is the benefit of using fourth order interactions?
+
+    #why normalised by N^3 instead of P?
+
     # Expand dimensions for broadcasting
     patterns_i = patterns[:, :, np.newaxis, np.newaxis, np.newaxis]  # (M, N, 1, 1, 1)
     patterns_j = patterns[:, np.newaxis, :, np.newaxis, np.newaxis]  # (M, 1, N, 1, 1)
@@ -49,6 +53,8 @@ def overlap_phase_pattern(phase, pattern):
     pattern = np.asarray(pattern, dtype=np.float64)
     exp_phase = np.exp(1j * phase)
     return np.abs(np.mean(exp_phase * pattern))
+
+#what is the purpose of different overlap functions?
 
 def generateOrthogonalPatterns(N, Np):
     # Check if N is a power of 2
