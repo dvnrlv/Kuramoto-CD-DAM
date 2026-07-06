@@ -1,131 +1,207 @@
-import numpy as np
+"""
+run_experiment.py
+
+Experiment pipeline built on top of networks.py:
+  1. Pick a network type, N (units), P (stored patterns).
+  2. Generate P random patterns and train the network on them.
+  3. Corrupt one stored pattern to build an initial state.
+  4. Run recall/relaxation from that corrupted state.
+  5. Compute overlap with every stored pattern at each step and plot it.
+
+Usage:
+    python run_experiment.py --network hopfield --N 200 --P 6
+    python run_experiment.py --network kuramoto_low --N 200 --P 6
+    python run_experiment.py --network kuramoto_high --N 100 --P 5
+"""
+
+import argparse
 import numpy as np
 import matplotlib.pyplot as plt
-from context_tools import (
-	HopfieldNetwork,
-	HigherOrderKuramoto,
-	generateOrthogonalPatterns,
-	overlap_phase_patterns,
-	overlap_patterns,
-)
+
+from network_lib import *
+
+# --------------------------------------------------------------------------
+# Pattern generation / corruption
+# --------------------------------------------------------------------------
 
 
-def corrupt_phase(phase, frac):
-	"""Flip phase by pi at random fraction of sites."""
-	new = phase.copy()
-	nflip = max(1, int(len(phase) * frac))
-	idx = np.random.choice(len(phase), nflip, replace=False)
-	new[idx] = (new[idx] + np.pi) % (2 * np.pi)
-	return new
+def generate_random_patterns(P, N, rng):
+    return rng.choice([-1.0, 1.0], size=(P, N))
 
 
-def phase_to_binary(phase):
-	# map phase -> ±1 using sign of cos(phase)
-	return np.where(np.cos(phase) >= 0, 1, -1)
+def corrupt_binary_pattern(pattern, flip_fraction, rng):
+    """Flip a random fraction of entries of a +-1 pattern."""
+    corrupted = pattern.copy()
+    n_flip = int(round(flip_fraction * len(pattern)))
+    idx = rng.choice(len(pattern), size=n_flip, replace=False)
+    corrupted[idx] *= -1
+    return corrupted
 
 
-def run_higher_order_kuramoto_example():
-	np.random.seed(1)
-	N = 32
-	P = 3
-
-	# generate orthogonal-like ±1 patterns
-	patterns = generateOrthogonalPatterns(N, P)
-
-	# display stored patterns (print and image)
-	print('Stored patterns (rows = patterns, cols = neurons):')
-	print(patterns)
-
-	# create and train network with noise present (original example)
-	net = HigherOrderKuramoto(N, J=2.0, K=1.0, D=0.01)
-	net.train(patterns, norm=True)
-
-	# initialize phases aligned to pattern 0 (0 for +1, pi for -1)
-	base_phase = np.where(patterns[0] == 1, 0.0, np.pi)
-	init_phase = corrupt_phase(base_phase, frac=0.2)  # 20% corruption
-
-	# run recall (original T and dt)
-	times, history = net.recall(init_phase, T=5.0, dt=0.01)
-
-	# compute overlaps over time (time x P)
-	overlaps = np.array([overlap_phase_patterns(history[t], patterns) for t in range(len(history))])
-
-	# prepare images: stored patterns, initial attempt, final attempt
-	initial_bin = phase_to_binary(init_phase)
-	final_bin = phase_to_binary(history[-1])
-
-	# plot patterns and attempts
-	fig, axes = plt.subplots(1, 3, figsize=(12, 4))
-	axes[0].imshow(patterns, aspect='auto', cmap='bwr', vmin=-1, vmax=1)
-	axes[0].set_title('Stored patterns (P x N)')
-	axes[1].imshow(initial_bin[np.newaxis, :], aspect='auto', cmap='bwr', vmin=-1, vmax=1)
-	axes[1].set_title('Initial attempt (mapped)')
-	axes[2].imshow(final_bin[np.newaxis, :], aspect='auto', cmap='bwr', vmin=-1, vmax=1)
-	axes[2].set_title('Final attempt (mapped)')
-	for a in axes:
-		a.set_ylabel('pattern / attempt')
-		a.set_xlabel('neuron index')
-
-	plt.tight_layout()
-
-	# plot overlaps
-	plt.figure(figsize=(6, 4))
-	for mu in range(P):
-		plt.plot(times, overlaps[:, mu], label=f'pattern {mu}')
-	plt.xlabel('time')
-	plt.ylabel('overlap |R^mu|')
-	plt.title('Overlap convergence')
-	plt.legend()
-	plt.tight_layout()
-
-	print('Initial overlaps:', overlaps[0])
-	print('Final overlaps:', overlaps[-1])
-
-	# check binary overlap with target pattern (should be 1 for exact retrieval)
-	final_bin_overlap = overlap_patterns(final_bin, patterns[0])
-	print('Final binary overlap with target pattern 0:', final_bin_overlap)
-
-	plt.show()
+def pattern_to_phase(pattern, noise_std, rng):
+    """Map a +-1 pattern to phases (0 or pi) and add Gaussian phase noise."""
+    base_phase = np.where(pattern > 0, 0.0, np.pi)
+    noise = rng.normal(0, noise_std, size=pattern.shape)
+    return (base_phase + noise) % (2 * np.pi)
 
 
-if __name__ == '__main__':
-	run_higher_order_kuramoto_example()
+# --------------------------------------------------------------------------
+# Experiment orchestration
+# --------------------------------------------------------------------------
 
 
-def flip_bits(pattern, frac):
-	s = pattern.copy()
-	nflip = max(1, int(len(s) * frac))
-	idx = np.random.choice(len(s), nflip, replace=False)
-	s[idx] *= -1
-	return s
+def run_experiment(network_type, N, P, max_iterations, corruption=0.25, target_idx=0,
+                    T=10.0, dt=0.02, seed=0):
+    rng = np.random.default_rng(seed)
+    patterns = generate_random_patterns(P, N, rng)
+    target = patterns[target_idx]
+
+    if network_type == "hopfield":
+        net = HopfieldNetwork(N)
+        net.train(patterns)
+        init_state = corrupt_binary_pattern(target, corruption, rng)
+        history = net.recall(init_state, max_iterations=max_iterations)
+        steps = np.arange(len(history))
+        overlaps = np.array([[overlap_patterns(s, p) for p in patterns] for s in history])
+        x_label = "iteration"
+
+    elif network_type == "hopfield_higher":
+        net = HigherOrderHopfieldNetwork(N)
+        net.train(patterns)
+        init_state = corrupt_binary_pattern(target, corruption, rng)
+        history = net.recall(init_state, max_iterations=max_iterations)
+        steps = np.arange(len(history))
+        overlaps = np.array([[overlap_patterns(s, p) for p in patterns] for s in history])
+        x_label = "iteration"
+
+    elif network_type == "kuramoto_low":
+        net = KuramotoNetwork2ndOrder(N, alpha=0.0)
+        net.train(patterns)
+        init_state = pattern_to_phase(target, noise_std=corruption * np.pi, rng=rng)
+        steps, history = net.recall(init_state, T=T, dt=dt)
+        overlaps = np.array([overlap_phase_patterns(s, patterns) for s in history])
+        x_label = "time"
+
+    elif network_type == "kuramoto_high":
+        net = HigherOrderKuramoto(N, J=1.0, K=1.0, D=0.0)
+        net.train(patterns, norm=True)
+        init_state = pattern_to_phase(target, noise_std=corruption * np.pi, rng=rng)
+        steps, history = net.recall(init_state, T=T, dt=dt)
+        overlaps = np.array([overlap_phase_patterns(s, patterns) for s in history])
+        x_label = "time"
+
+    elif network_type == "hopfield_prl":
+        net = HopfieldPRL(N)
+        net.train(patterns)
+        init_state = corrupt_binary_pattern(target, corruption, rng)
+        steps, history = net.recall(init_state, T=T, dt=dt)
+        overlaps = np.array([[overlap_patterns(s, p) for p in patterns] for s in history])
+        x_label = "time"
+
+    else:
+        raise ValueError(
+            "network_type must be one of: 'hopfield', 'hopfield_higher', 'kuramoto_low', 'kuramoto_high', 'hopfield_prl'"
+        )
+
+    return steps, overlaps, x_label, target_idx
 
 
+# --------------------------------------------------------------------------
+# Plotting
+# --------------------------------------------------------------------------
+
+
+def plot_overlaps(steps, overlaps, x_label, target_idx, network_type, save_path=None):
+    import matplotlib.pyplot as plt
+
+    P = overlaps.shape[1]
+    fig, ax = plt.subplots(figsize=(8, 5))
+    for p in range(P):
+        style = "-" if p == target_idx else "--"
+        lw = 2.5 if p == target_idx else 1.2
+        alpha = 1.0 if p == target_idx else 0.6
+        label = f"pattern {p}" + (" (target)" if p == target_idx else "")
+        ax.plot(steps, overlaps[:, p], style, linewidth=lw, alpha=alpha, label=label)
+
+    ax.set_xlabel(x_label)
+    ax.set_ylabel("overlap with stored pattern")
+    ax.set_title(f"Recall dynamics: {network_type}")
+    ax.set_ylim(-0.05, 1.05) if overlaps.min() >= -1e-6 else ax.set_ylim(-1.05, 1.05)
+    ax.legend(fontsize=8, ncol=2)
+    ax.grid(alpha=0.3)
+    fig.tight_layout()
+
+    if save_path:
+        fig.savefig(save_path, dpi=150)
+    return fig
+
+
+# Energy landscape plotting removed per user request.
+
+NETWORK_CHOICES = {
+    "1": "hopfield",
+    "2": "hopfield_higher",
+    "3": "kuramoto_low",
+    "4": "kuramoto_high",
+    "5": "hopfield_prl",
+}
+ 
+# Networks whose recall() takes T/dt (continuous time) vs max_iterations (discrete steps)
+CONTINUOUS_NETWORKS = {"kuramoto_low", "kuramoto_high", "hopfield_prl"}
+ 
+ 
+def ask(prompt, default, cast=str):
+    """Prompt the user for a value; press Enter to accept the default."""
+    raw = input(f"{prompt} [default {default}]: ").strip()
+    if raw == "":
+        return default
+    return cast(raw)
+ 
+ 
+def choose_network():
+    print("Which network do you want to use?")
+    print("  1) hopfield         - standard 2nd-order Hopfield (binary, discrete)")
+    print("  2) hopfield_higher  - higher-order Hopfield (binary, discrete)")
+    print("  3) kuramoto_low     - Kuramoto, pairwise coupling only (phase)")
+    print("  4) kuramoto_high    - Kuramoto, 2nd + 4th order coupling (phase)")
+    print("  5) hopfield_prl     - continuous 4th-order dense associative memory")
+    while True:
+        choice = input("Enter a number [default 1]: ").strip() or "1"
+        if choice in NETWORK_CHOICES:
+            return NETWORK_CHOICES[choice]
+        print("Please enter one of: 1, 2, 3, 4, 5")
+ 
+ 
 def main():
-	np.random.seed(0)
-	N = 16        # number of neurons (must be power of 2 for generateOrthogonalPatterns)
-	P = 3         # number of stored patterns
-
-	patterns = generateOrthogonalPatterns(N, P)  # shape (P, N), entries ±1
-
-	net = HopfieldNetwork(N)
-	net.train(patterns)
-
-	target = patterns[0].copy()
-	init_state = flip_bits(target, frac=0.2)   # corrupt 20% of bits
-
-	print("Initial overlaps:", [float(overlap_patterns(init_state, patterns[i])) for i in range(P)])
-	print("Initial energy:", net.energy(init_state))
-
-	history = net.recall(init_state, max_iterations=50, synchronous=True)
-	final = history[-1]
-
-	print("Converged in steps:", len(history) - 1)
-	print("Final overlaps:", [float(overlap_patterns(final, patterns[i])) for i in range(P)])
-	print("Final energy:", net.energy(final))
+    print("=== Associative Memory Recall Demo ===\n")
+ 
+    network_type = choose_network()
+    N = 2**ask("Number of neurons (power of 2)", 8, int)
+    P = ask("Number of stored patterns (P)", 6, int)
+    corruption = ask("Corruption level of initial state (0-1)", 0.25, float)
+    seed = ask("Random seed", 0, int)
+ 
+    if network_type in CONTINUOUS_NETWORKS:
+        T = 10
+        dt = 0.02
+        max_iterations = 30  # unused for these networks
+    else:
+        max_iterations = ask("Max iterations (discrete Hopfield networks)", 30, int)
+        T, dt = 10.0, 0.02  # unused for these networks
+ 
+    print("\nRunning experiment...")
+    steps, overlaps, x_label, target_idx = run_experiment(
+        network_type=network_type, N=N, P=P,
+        corruption=corruption, target_idx=0,
+        T=T, dt=dt, seed=seed,
+        max_iterations=max_iterations,
+    )
+    # Show the overlaps plot interactively instead of saving to file
+    fig = plot_overlaps(steps, overlaps, x_label, target_idx, network_type, save_path=None)
+    
+    print(f"Final overlap with target pattern: {overlaps[-1, target_idx]:.3f}")
+    plt.show()
 
 
 if __name__ == "__main__":
-	main()
-
-
-
+    main()

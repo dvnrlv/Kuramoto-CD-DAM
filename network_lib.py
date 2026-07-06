@@ -238,7 +238,6 @@ class HigherOrderHopfieldNetwork:
             if synchronous and np.array_equal(history[-1], history[-2]):
                 #print('Converged')
                 break
-            
 
         return np.array(history)
 
