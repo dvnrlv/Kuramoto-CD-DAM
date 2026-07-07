@@ -45,6 +45,75 @@ def pattern_to_phase(pattern, noise_std, rng):
     return (base_phase + noise) % (2 * np.pi)
 
 
+def adaptive_recall(net, init_state, network_type, max_iterations, T, dt,
+                    tol=1e-8, k_consec=5, div_tol=1.0, max_steps=100000,
+                    chunk_T=1.0):
+    """Adaptive recall: iterate until convergence/divergence criteria are met.
+
+    For discrete networks, uses `net.update()` repeatedly. For continuous
+    networks (listed in `CONTINUOUS_NETWORKS`) it runs `net.recall` in chunks
+    of duration `chunk_T` and inspects recent changes.
+
+    Returns (steps, history) where steps is either np.arange(len(history))
+    for discrete or an array of times for continuous.
+    """
+    is_continuous = network_type in CONTINUOUS_NETWORKS
+
+    if is_continuous:
+        times_all = []
+        history_all = []
+        current_state = init_state.copy()
+        total_time = 0.0
+        steps = 0
+        while True:
+            times_chunk, history_chunk = net.recall(current_state, T=chunk_T, dt=dt)
+            if len(history_all) == 0:
+                times_all.extend(list(times_chunk))
+                history_all.extend([h.copy() for h in history_chunk])
+            else:
+                times_all.extend([total_time + t for t in times_chunk[1:]])
+                history_all.extend([h.copy() for h in history_chunk[1:]])
+
+            # convergence/divergence checks on most recent k_consec changes
+            if len(history_all) >= k_consec + 1:
+                recent_changes = [np.max(np.abs(history_all[-i] - history_all[-i-1])) for i in range(1, k_consec+1)]
+                if all(c < tol for c in recent_changes):
+                    break
+                if np.mean(recent_changes) > div_tol:
+                    break
+
+            current_state = history_chunk[-1].copy()
+            total_time += times_chunk[-1]
+            steps += len(history_chunk) - 1
+            if steps > max_steps:
+                break
+
+        return np.array(times_all), np.array(history_all)
+
+    else:
+        history = [init_state.copy()]
+        state = init_state.copy()
+        consec = 0
+        steps = 0
+        while True:
+            state = net.update(state, synchronous=True)
+            history.append(state.copy())
+            steps += 1
+            change = np.max(np.abs(history[-1] - history[-2]))
+            if change == 0:
+                break
+            if change < tol:
+                consec += 1
+                if consec >= k_consec:
+                    break
+            else:
+                consec = 0
+            if steps >= max_steps:
+                break
+
+        return np.arange(len(history)), np.array(history)
+
+
 # --------------------------------------------------------------------------
 # Experiment orchestration
 # --------------------------------------------------------------------------
@@ -60,8 +129,7 @@ def run_experiment(network_type, N, P, max_iterations, corruption=0.25, target_i
         net = HopfieldNetwork(N)
         net.train(patterns)
         init_state = corrupt_binary_pattern(target, corruption, rng)
-        history = net.recall(init_state, max_iterations=max_iterations)
-        steps = np.arange(len(history))
+        steps, history = adaptive_recall(net, init_state, network_type, max_iterations, T, dt)
         overlaps = np.array([[overlap_patterns(s, p) for p in patterns] for s in history])
         x_label = "iteration"
 
@@ -69,8 +137,7 @@ def run_experiment(network_type, N, P, max_iterations, corruption=0.25, target_i
         net = HigherOrderHopfieldNetwork(N)
         net.train(patterns)
         init_state = corrupt_binary_pattern(target, corruption, rng)
-        history = net.recall(init_state, max_iterations=max_iterations)
-        steps = np.arange(len(history))
+        steps, history = adaptive_recall(net, init_state, network_type, max_iterations, T, dt)
         overlaps = np.array([[overlap_patterns(s, p) for p in patterns] for s in history])
         x_label = "iteration"
 
@@ -78,7 +145,7 @@ def run_experiment(network_type, N, P, max_iterations, corruption=0.25, target_i
         net = KuramotoNetwork2ndOrder(N, alpha=0.0)
         net.train(patterns)
         init_state = pattern_to_phase(target, noise_std=corruption * np.pi, rng=rng)
-        steps, history = net.recall(init_state, T=T, dt=dt)
+        steps, history = adaptive_recall(net, init_state, network_type, max_iterations, T, dt)
         overlaps = np.array([overlap_phase_patterns(s, patterns) for s in history])
         x_label = "time"
 
@@ -86,7 +153,7 @@ def run_experiment(network_type, N, P, max_iterations, corruption=0.25, target_i
         net = HigherOrderKuramoto(N, J=1.0, K=1.0, D=0.0)
         net.train(patterns, norm=True)
         init_state = pattern_to_phase(target, noise_std=corruption * np.pi, rng=rng)
-        steps, history = net.recall(init_state, T=T, dt=dt)
+        steps, history = adaptive_recall(net, init_state, network_type, max_iterations, T, dt)
         overlaps = np.array([overlap_phase_patterns(s, patterns) for s in history])
         x_label = "time"
 
@@ -94,7 +161,7 @@ def run_experiment(network_type, N, P, max_iterations, corruption=0.25, target_i
         net = HopfieldPRL(N)
         net.train(patterns)
         init_state = corrupt_binary_pattern(target, corruption, rng)
-        steps, history = net.recall(init_state, T=T, dt=dt)
+        steps, history = adaptive_recall(net, init_state, network_type, max_iterations, T, dt)
         overlaps = np.array([[overlap_patterns(s, p) for p in patterns] for s in history])
         x_label = "time"
 
