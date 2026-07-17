@@ -18,7 +18,7 @@ import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 
-from network_lib import *
+from implementation.CDM2026.dense_memory.network_lib import *
 
 # --------------------------------------------------------------------------
 # Pattern generation / corruption
