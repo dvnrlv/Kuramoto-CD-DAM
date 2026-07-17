@@ -47,6 +47,15 @@ Typical usage
 Sweeping N or seed across trials just means constructing a new `KuramotoNetwork` per
 value while reusing the same `CONFIG` -- that sweep loop is left for you to write in a
 notebook, not baked into this module.
+
+Implementation note
+--------------------
+Public method names and signatures are unchanged from the original module (external
+code depends on them). Internally, the repeated `x = fallback if x is None else x`
+idiom has been collected into a single `_default()` helper, and the logic that used to
+be duplicated between the single-sequence and multi-sequence code paths (mutation
+chains, edge-building, ODE/SDE dispatch) has been factored into small private helpers
+that both paths call.
 """
 
 from __future__ import annotations
@@ -66,6 +75,15 @@ except ImportError:  # pragma: no cover - allows the module to still import with
         def wrap(fn):
             return fn
         return wrap
+
+
+def _default(value, fallback):
+    """Return `value` unless it's None, in which case return `fallback`.
+
+    Collects the `x = fallback if x is None else x` idiom (used throughout this module
+    for "per-call override of a config default") into one place.
+    """
+    return fallback if value is None else value
 
 
 # ---------------------------------------------------------------------------
@@ -222,21 +240,58 @@ class PatternLibrary:
 
     # -- mutation-based pattern generation --------------------------------------
 
-    def mutate_pattern(self, base_name: str, new_name: str, corruption_rate: float, seed: Optional[int] = None) -> None:
-        """Append a new stored pattern obtained by corrupting `base_name` (reuses `corrupt`,
-        i.e. the same random-subset-of-spins flip 0 <-> pi used to build a cue). Unlike
-        `generate_patterns`, the new pattern is correlated with its base rather than
-        independent random noise -- this is the building block for a mutation-driven
-        sequence (xi^{k+1} = mutate(xi^k))."""
-        if new_name in self.name_to_index:
-            raise ValueError(f"Pattern name already exists: {new_name}")
-        new_phase = self.corrupt(base_name, corruption_rate, seed=seed)
+    def _append_pattern(self, name: str, phase: np.ndarray) -> None:
+        """Store one already-computed phase vector under `name`. The single place that
+        knows how to grow `phases`/`xi`/`name_to_index`/`pattern_names` together for a
+        one-at-a-time addition (`generate_patterns` does the analogous thing in bulk,
+        for many patterns at once, so it keeps its own batched vstack instead of calling
+        this in a loop)."""
+        if name in self.name_to_index:
+            raise ValueError(f"Pattern name already exists: {name}")
+        self.name_to_index[name] = len(self.pattern_names)
+        self.pattern_names.append(name)
+        self.phases = np.vstack([self.phases, phase[None, :]]) if self.phases.size else phase[None, :]
+        new_xi = np.cos(phase)
+        self.xi = np.vstack([self.xi, new_xi[None, :]]) if self.xi.size else new_xi[None, :]
 
-        new_xi = np.cos(new_phase)
-        self.phases = np.vstack([self.phases, new_phase[None, :]])
-        self.xi = np.vstack([self.xi, new_xi[None, :]])
-        self.name_to_index[new_name] = len(self.pattern_names)
-        self.pattern_names.append(new_name)
+    def mutate_pattern(self, base_name: str, new_name: str, corruption_rate: float, seed: Optional[int] = None) -> np.ndarray:
+        """Corrupt `base_name` (reuses `corrupt`, i.e. the same random-subset-of-spins
+        flip 0 <-> pi used to build a cue), store the result under `new_name`, and return
+        the new phase vector. Unlike `generate_patterns`, the new pattern is correlated
+        with its base rather than independent random noise -- this is the building block
+        for a mutation-driven sequence (xi^{k+1} = mutate(xi^k)).
+
+        `corrupt` itself is pure (reads `self.phases`, doesn't write it); `_append_pattern`
+        is the only step here that mutates `self` -- so this method reads as "compute, then
+        store, then hand back what was stored" rather than hand-rolling the bookkeeping."""
+        new_phase = self.corrupt(base_name, corruption_rate, seed=seed)
+        self._append_pattern(new_name, new_phase)
+        return new_phase
+
+    def _mutation_chain(
+        self,
+        base_name: str,
+        seq_len: int,
+        corruption_rate: float,
+        seed: Optional[int],
+        name_template: str,
+    ) -> List[str]:
+        """Shared core of `generate_sequence`/`generate_named_sequence`: build a length-
+        (seq_len+1) chain of pattern names by repeatedly mutating `base_name` (xi^1 =
+        base_name, already generated; xi^{k+1} = mutate(xi^k, corruption_rate)). Only
+        generates the names/patterns -- registering the chain as a sequence is left to
+        the caller, since the two callers register it under different stores
+        (`self.sequence` vs. `self.sequences[name]`)."""
+        rng = np.random.default_rng(_default(seed, self.seed))
+        names = [base_name]
+        current = base_name
+        for k in range(1, seq_len + 1):
+            new_name = name_template.format(base=base_name, k=k)
+            step_seed = int(rng.integers(0, 2**32 - 1))
+            self.mutate_pattern(current, new_name, corruption_rate, seed=step_seed)
+            names.append(new_name)
+            current = new_name
+        return names
 
     def generate_sequence(
         self,
@@ -250,16 +305,7 @@ class PatternLibrary:
         xi^1 = base_name (already generated), xi^{k+1} = mutate(xi^k, corruption_rate).
         Registers the resulting chain as the stored sequence and returns the ordered
         pattern names."""
-        rng = np.random.default_rng(seed if seed is not None else self.seed)
-        names = [base_name]
-        current = base_name
-        for k in range(1, seq_len + 1):
-            new_name = name_template.format(base=base_name, k=k)
-            step_seed = int(rng.integers(0, 2**32 - 1))
-            self.mutate_pattern(current, new_name, corruption_rate, seed=step_seed)
-            names.append(new_name)
-            current = new_name
-
+        names = self._mutation_chain(base_name, seq_len, corruption_rate, seed, name_template)
         self.add_sequence(names)
         return names
 
@@ -267,12 +313,24 @@ class PatternLibrary:
 
     def add_sequence(self, pattern_names_in_order: Sequence[str]) -> None:
         """Register the (single) stored sequence over already-generated pattern names."""
+        self.sequence = self._resolve_indices(pattern_names_in_order)
+
+    def _resolve_indices(self, pattern_names_in_order: Sequence[str]) -> np.ndarray:
+        """Look up an ordered list of pattern names as an int64 index array, raising a
+        clear error for any name that hasn't been generated yet."""
         missing = [n for n in pattern_names_in_order if n not in self.name_to_index]
         if missing:
             raise ValueError(f"Unknown pattern name(s): {missing}. Call generate_patterns first.")
-        self.sequence = np.array(
-            [self.name_to_index[n] for n in pattern_names_in_order], dtype=np.int64
-        )
+        return np.array([self.name_to_index[n] for n in pattern_names_in_order], dtype=np.int64)
+
+    @staticmethod
+    def _chain_edges(seq_idx: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+        """(from, to) transition edges for one ordered chain of pattern indices: one edge
+        per consecutive pair, plus a terminal self-loop (last index -> itself) so the
+        dynamics settle at the last pattern instead of cycling back to the first."""
+        edges_from = np.concatenate([seq_idx[:-1], seq_idx[-1:]])
+        edges_to = np.concatenate([seq_idx[1:], seq_idx[-1:]])
+        return edges_from.astype(np.int64), edges_to.astype(np.int64)
 
     def build_transition_edges(self) -> Tuple[np.ndarray, np.ndarray]:
         """Flatten the stored sequence's mu -> mu+1 transitions into a (from, to) edge
@@ -281,10 +339,7 @@ class PatternLibrary:
         cycling indefinitely."""
         if self.sequence is None:
             raise ValueError("No sequence registered; call add_sequence(...) first.")
-        seq_idx = self.sequence
-        edges_from = np.concatenate([seq_idx[:-1], seq_idx[-1:]])
-        edges_to = np.concatenate([seq_idx[1:], seq_idx[-1:]])
-        return edges_from.astype(np.int64), edges_to.astype(np.int64)
+        return self._chain_edges(self.sequence)
 
     # -- multiple named sequences (section 2) --------------------------------
 
@@ -294,12 +349,7 @@ class PatternLibrary:
         the single implicit `self.sequence`)."""
         if name in self.sequences:
             raise ValueError(f"Sequence name already exists: {name}")
-        missing = [n for n in pattern_names_in_order if n not in self.name_to_index]
-        if missing:
-            raise ValueError(f"Unknown pattern name(s): {missing}. Call generate_patterns first.")
-        self.sequences[name] = np.array(
-            [self.name_to_index[n] for n in pattern_names_in_order], dtype=np.int64
-        )
+        self.sequences[name] = self._resolve_indices(pattern_names_in_order)
 
     def generate_named_sequence(
         self,
@@ -314,16 +364,7 @@ class PatternLibrary:
         generated; xi^{a,k+1} = mutate(xi^{a,k}, corruption_rate)), but registers the
         resulting chain under `seq_name` in `self.sequences` instead of overwriting the
         single `self.sequence`."""
-        rng = np.random.default_rng(seed if seed is not None else self.seed)
-        names = [base_name]
-        current = base_name
-        for k in range(1, seq_len + 1):
-            new_name = name_template.format(base=base_name, k=k)
-            step_seed = int(rng.integers(0, 2**32 - 1))
-            self.mutate_pattern(current, new_name, corruption_rate, seed=step_seed)
-            names.append(new_name)
-            current = new_name
-
+        names = self._mutation_chain(base_name, seq_len, corruption_rate, seed, name_template)
         self.add_named_sequence(seq_name, names)
         return names
 
@@ -340,7 +381,7 @@ class PatternLibrary:
         drawn independently of each other, not derived from one shared ancestor), each
         then mutated `seq_len` times into its own named chain under `base_names[a]`.
         Returns `{sequence_name: ordered_pattern_names}`."""
-        rng = np.random.default_rng(seed if seed is not None else self.seed)
+        rng = np.random.default_rng(_default(seed, self.seed))
         base_names = list(base_names)
         self.generate_patterns(base_names)
 
@@ -369,24 +410,19 @@ class PatternLibrary:
         convention. A pattern shared by multiple sequences (e.g. a common first pattern)
         contributes one edge per sequence it starts a transition in, so summing the
         resulting edge list reproduces `sum_a sum_mu (...)` from the update rule exactly."""
-        names = list(sequence_names) if sequence_names is not None else list(self.sequences.keys())
+        names = _default(list(sequence_names) if sequence_names is not None else None,
+                          list(self.sequences.keys()))
         if not names:
             raise ValueError("No sequences registered; call add_named_sequence(...) first.")
 
-        edges_from, edges_to = [], []
-        for name in names:
-            if name not in self.sequences:
-                raise ValueError(f"Unknown sequence name: {name!r}")
-            seq_idx = self.sequences[name]
-            edges_from.append(seq_idx[:-1])
-            edges_to.append(seq_idx[1:])
-            edges_from.append(seq_idx[-1:])
-            edges_to.append(seq_idx[-1:])
+        missing = [n for n in names if n not in self.sequences]
+        if missing:
+            raise ValueError(f"Unknown sequence name(s): {missing}")
 
-        return (
-            np.concatenate(edges_from).astype(np.int64),
-            np.concatenate(edges_to).astype(np.int64),
-        )
+        edge_pairs = [self._chain_edges(self.sequences[n]) for n in names]
+        edges_from = np.concatenate([frm for frm, _ in edge_pairs])
+        edges_to = np.concatenate([to for _, to in edge_pairs])
+        return edges_from, edges_to
 
     # -- cueing ----------------------------------------------------------------
 
@@ -398,7 +434,7 @@ class PatternLibrary:
         if corruption_rate <= 0:
             return phase_pattern
 
-        rng = np.random.default_rng(seed if seed is not None else self.seed)
+        rng = np.random.default_rng(_default(seed, self.seed))
         num_flips = int(corruption_rate * phase_pattern.shape[0])
         flip_idx = rng.choice(phase_pattern.shape[0], size=num_flips, replace=False)
         phase_pattern[flip_idx] = np.pi - phase_pattern[flip_idx]
@@ -458,7 +494,7 @@ class KuramotoNetwork:
         return int(T / self.dt)
 
     def time_vector(self, T: Optional[float] = None) -> np.ndarray:
-        T = self.T if T is None else T
+        T = _default(T, self.T)
         return np.linspace(0.0, T, self.num_steps_for(T) + 1)
 
     def _make_omega(self) -> np.ndarray:
@@ -482,13 +518,48 @@ class KuramotoNetwork:
         seed: Optional[int] = None,
         name_template: str = "{base}_{k}",
     ) -> Dict[str, List[str]]:
-        corruption_rate = self.corruption_rate if corruption_rate is None else corruption_rate
-        seed = self.seed if seed is None else seed
         return self.plibrary.generate_sequences(
-            base_names, seq_len, corruption_rate, seed=seed, name_template=name_template,
+            base_names, seq_len,
+            _default(corruption_rate, self.corruption_rate),
+            seed=_default(seed, self.seed),
+            name_template=name_template,
         )
 
     # -- simulation --------------------------------------------------------
+
+    def _integrate(
+        self,
+        edges_from: np.ndarray,
+        edges_to: np.ndarray,
+        theta_init: np.ndarray,
+        mode: Optional[str],
+        seed: Optional[int],
+        T: Optional[float],
+    ) -> Tuple[np.ndarray, np.ndarray]:
+        """Shared ODE/SDE dispatch used by both `simulate` and `simulate_multi`: resolve
+        the per-call overrides against the network's config defaults, run the requested
+        kernel, and return (theta_history, time_vector). The kernels themselves don't
+        care whether `edges_from`/`edges_to` came from one chain or several concatenated
+        chains -- see `PatternLibrary.build_transition_edges[_for]`."""
+        mode = _default(mode, self.mode)
+        seed = _default(seed, self.seed)
+        T = _default(T, self.T)
+        num_steps = self.num_steps_for(T)
+
+        if mode == "ode":
+            theta_history = _simulate_euler(
+                theta_init, self.omega, self.plibrary.xi, edges_from, edges_to,
+                self.d, self.dt, num_steps,
+            )
+        elif mode == "sde":
+            theta_history = _simulate_maruyama(
+                theta_init, self.omega, self.plibrary.xi, edges_from, edges_to,
+                self.d, self.dt, num_steps, self.phase_noise, seed,
+            )
+        else:
+            raise ValueError("mode must be either 'ode' or 'sde'")
+
+        return theta_history, self.time_vector(T)
 
     def simulate(
         self,
@@ -520,37 +591,15 @@ class KuramotoNetwork:
         dict with 'time', 'theta_history', 'cue', plus (for convenience) 'overlaps'
         (overlap with every stored pattern over time).
         """
-        mode = self.mode if mode is None else mode
-        seed = self.seed if seed is None else seed
-        T = self.T if T is None else T
-
         if self.plibrary.sequence is None:
             raise ValueError("No sequence registered; call add_sequence(...) first.")
-        if cue_pattern is None:
-            cue_pattern = self.plibrary.pattern_names[self.plibrary.sequence[0]]
+        cue_pattern = _default(cue_pattern, self.plibrary.pattern_names[self.plibrary.sequence[0]])
 
         edges_from, edges_to = self.plibrary.build_transition_edges()
         theta_init = self.plibrary.corrupt(cue_pattern, corruption_rate=0.0)
-        num_steps = self.num_steps_for(T)
+        theta_history, time = self._integrate(edges_from, edges_to, theta_init, mode, seed, T)
 
-        if mode == "ode":
-            theta_history = _simulate_euler(
-                theta_init, self.omega, self.plibrary.xi, edges_from, edges_to,
-                self.d, self.dt, num_steps,
-            )
-        elif mode == "sde":
-            theta_history = _simulate_maruyama(
-                theta_init, self.omega, self.plibrary.xi, edges_from, edges_to,
-                self.d, self.dt, num_steps, self.phase_noise, seed,
-            )
-        else:
-            raise ValueError("mode must be either 'ode' or 'sde'")
-
-        result = {
-            "time": self.time_vector(T),
-            "theta_history": theta_history,
-            "cue": cue_pattern,
-        }
+        result = {"time": time, "theta_history": theta_history, "cue": cue_pattern}
         result["overlaps"] = self.overlaps(theta_history)
         return result
 
@@ -586,33 +635,14 @@ class KuramotoNetwork:
         each sequence in `sequence_names`, i.e. m^{a,mu}(t) restricted to sequence a's own
         patterns.
         """
-        mode = self.mode if mode is None else mode
-        seed = self.seed if seed is None else seed
-        T = self.T if T is None else T
+        names = _default(list(sequence_names) if sequence_names is not None else None,
+                          list(self.plibrary.sequences.keys()))
 
-        names = list(sequence_names) if sequence_names is not None else list(self.plibrary.sequences.keys())
         edges_from, edges_to = self.plibrary.build_transition_edges_for(names)
         theta_init = self.plibrary.corrupt(cue_pattern, corruption_rate=0.0)
-        num_steps = self.num_steps_for(T)
+        theta_history, time = self._integrate(edges_from, edges_to, theta_init, mode, seed, T)
 
-        if mode == "ode":
-            theta_history = _simulate_euler(
-                theta_init, self.omega, self.plibrary.xi, edges_from, edges_to,
-                self.d, self.dt, num_steps,
-            )
-        elif mode == "sde":
-            theta_history = _simulate_maruyama(
-                theta_init, self.omega, self.plibrary.xi, edges_from, edges_to,
-                self.d, self.dt, num_steps, self.phase_noise, seed,
-            )
-        else:
-            raise ValueError("mode must be either 'ode' or 'sde'")
-
-        result = {
-            "time": self.time_vector(T),
-            "theta_history": theta_history,
-            "cue": cue_pattern,
-        }
+        result = {"time": time, "theta_history": theta_history, "cue": cue_pattern}
         result["overlaps"] = self.overlaps(theta_history)
         result["sequence_overlaps"] = {
             name: self.overlaps(theta_history, self.plibrary.pattern_names_for_sequence(name))
@@ -655,9 +685,8 @@ class KuramotoNetwork:
         detection so a boundary sample still counts as a peak if it dominates its one
         interior neighbor.
         """
-
-
-        names = list(pattern_names) if pattern_names is not None else self.plibrary.pattern_names
+        names = _default(list(pattern_names) if pattern_names is not None else None,
+                          self.plibrary.pattern_names)
         overlap_history = self.overlaps(result["theta_history"], names)
 
         best_peak: Dict[str, Tuple[int, float]] = {}  # name -> (time_idx, height)
@@ -687,7 +716,8 @@ class KuramotoNetwork:
         crossing curves). Unlike `decode_sequence_peaks`, this only ever looks at overlaps
         up to the current timestep, so it also works on a partial/live trace.
         """
-        names = list(pattern_names) if pattern_names is not None else self.plibrary.pattern_names
+        names = _default(list(pattern_names) if pattern_names is not None else None,
+                          self.plibrary.pattern_names)
         overlap_history = self.overlaps(result["theta_history"], names)
 
         retrieved: List[str] = []
@@ -746,7 +776,7 @@ class KuramotoNetwork:
         compact multi-panel figure instead of popping a full-size figure per call."""
         import matplotlib.pyplot as plt
 
-        names = pattern_names if pattern_names is not None else self.plibrary.pattern_names
+        names = _default(pattern_names, self.plibrary.pattern_names)
         overlap_history = self.overlaps(result["theta_history"], names)
 
         standalone = ax is None
@@ -788,5 +818,3 @@ if __name__ == "__main__":
     result = net.simulate(cue_pattern=names[0])
     net.plot(result)
 """
-
-
