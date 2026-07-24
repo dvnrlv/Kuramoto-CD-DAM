@@ -707,8 +707,8 @@ class KuramotoNetwork:
         self,
         result: dict,
         sequences,
+        min_distance,
         tolerance: Optional[float] = None,
-        min_distance: int = 1,
     ) -> List[Tuple[str, int]]:
         """Offline/batch decoder: find each pattern's tallest hump (`scipy.signal.find_peaks`)
         and order patterns by when their peak occurs.
