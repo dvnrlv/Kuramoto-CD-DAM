@@ -1,2 +1,2 @@
 # CDM2026
-Context Dependent Memory
+Context Dependent Associative Memory with Pattern Crossover

@@ -334,6 +334,19 @@ def corrupt_phase(phase: np.ndarray, corruption_rate: float, rng: np.random.Gene
     return phase
 
 
+def sequence_from_patterns(name: str, patterns: TypingSequence[np.ndarray]) -> Sequence:
+    """Build a `Sequence` directly from an explicit, already-computed list of phase
+    vectors -- the manual-construction counterpart to `generate_sequence`'s
+    auto-mutated chain, for when you need specific patterns in specific positions
+    (e.g. reusing the same pattern across multiple sequences, as in a
+    crossover/intersection experiment)."""
+    N = patterns[0].shape[0]
+    vectors = VectorSequence(L=len(patterns), N=N)
+    for i, pattern in enumerate(patterns):
+        vectors[i] = pattern
+    return Sequence(name=name, vectors=vectors)
+
+
 def generate_sequence(
     N: int,
     seq_len: int,
@@ -556,10 +569,6 @@ class KuramotoNetwork:
     def num_steps_for(self, T: float) -> int:
         return int(T / self.dt)
 
-    def time_vector(self, T: Optional[float] = None) -> np.ndarray:
-        T = _default(T, self.T)
-        return np.linspace(0.0, T, self.num_steps_for(T) + 1)
-
     def _make_omega(self) -> np.ndarray:
         rng = np.random.default_rng(self.seed)
         return rng.normal(0.0, self.frequency_std, self.N)
@@ -607,9 +616,9 @@ class KuramotoNetwork:
         config defaults, run the requested kernel, and return (theta_history, time).
 
         The kernels may return fewer than num_steps+1 rows if the Stationary Break
-        Check ended the integration early (see STATIONARY_EPS/STATIONARY_PATIENCE) --
-        `time` is built to match whatever length actually came back, not blindly
-        assumed to be `num_steps+1` long."""
+        Check ended the integration early (see STATIONARY_EPS/STATIONARY_PATIENCE), so
+        `time` is built from however many rows actually came back (`actual_steps * dt`)
+        rather than assumed to span the originally-requested `T`."""
         mode = _default(mode, self.mode)
         seed = _default(seed, self.seed)
         T = _default(T, self.T)
@@ -628,10 +637,7 @@ class KuramotoNetwork:
             raise ValueError("mode must be either 'ode' or 'sde'")
 
         actual_steps = theta_history.shape[0] - 1
-        if actual_steps == num_steps:
-            time = self.time_vector(T)
-        else:
-            time = np.linspace(0.0, actual_steps * self.dt, actual_steps + 1)
+        time = np.linspace(0.0, actual_steps * self.dt, actual_steps + 1)
         return theta_history, time
 
     @staticmethod
