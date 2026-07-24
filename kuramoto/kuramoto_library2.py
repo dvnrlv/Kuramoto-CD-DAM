@@ -378,8 +378,16 @@ def generate_multi_sequence(
 # Low-level numba kernels (free functions -- numba methods can't take `self`)
 # ---------------------------------------------------------------------------
 
-@njit(cache=True)
-def _simulate_euler(theta_init, omega, xi, xi_next, d, dt, num_steps):
+# Stationary Break Check: if every neuron's own dtheta/dt stays below STATIONARY_EPS
+# for STATIONARY_PATIENCE consecutive steps, the trajectory has settled and further
+# integration is wasted -- stop early rather than running out the full schedule.
+STATIONARY_EPS = 1e-6
+STATIONARY_PATIENCE = 200
+
+
+@njit(cache=True, fastmath=True)
+def _simulate_euler(theta_init, omega, xi, xi_next, d, dt, num_steps,
+                     stationary_eps=STATIONARY_EPS, stationary_patience=STATIONARY_PATIENCE):
     N = theta_init.shape[0]
     num_patterns = xi.shape[0]
 
@@ -390,6 +398,9 @@ def _simulate_euler(theta_init, omega, xi, xi_next, d, dt, num_steps):
     cos_theta = np.empty(N, dtype=np.float64)
     sin_theta = np.empty(N, dtype=np.float64)
     S = np.empty(num_patterns, dtype=np.float64)
+
+    stationary_count = 0
+    actual_steps = num_steps
 
     for step in range(num_steps):
         for i in range(N):
@@ -410,17 +421,29 @@ def _simulate_euler(theta_init, omega, xi, xi_next, d, dt, num_steps):
                 h = (inner_sum / (N - 1)) ** d
                 V[i] += xi_next[p, i] * h
 
+        max_abs_dtheta = 0.0
         for i in range(N):
             dtheta_i = omega[i] - sin_theta[i] * V[i]
             theta[i] = theta[i] + dt * dtheta_i
+            if abs(dtheta_i) > max_abs_dtheta:
+                max_abs_dtheta = abs(dtheta_i)
 
         history[step + 1] = theta.copy()
 
-    return history
+        if max_abs_dtheta < stationary_eps:
+            stationary_count += 1
+            if stationary_count >= stationary_patience:
+                actual_steps = step + 1
+                break
+        else:
+            stationary_count = 0
+
+    return history[:actual_steps + 1]
 
 
-@njit(cache=True)
-def _simulate_maruyama(theta_init, omega, xi, xi_next, d, dt, num_steps, phase_noise, seed):
+@njit(cache=True, fastmath=True)
+def _simulate_maruyama(theta_init, omega, xi, xi_next, d, dt, num_steps, phase_noise, seed,
+                        stationary_eps=STATIONARY_EPS, stationary_patience=STATIONARY_PATIENCE):
     np.random.seed(seed) # for @njit, we have to use np.random.seed inside
 
     N = theta_init.shape[0]
@@ -435,6 +458,9 @@ def _simulate_maruyama(theta_init, omega, xi, xi_next, d, dt, num_steps, phase_n
     S = np.empty(num_patterns, dtype=np.float64)
 
     noise_scale = phase_noise * np.sqrt(dt)
+
+    stationary_count = 0
+    actual_steps = num_steps
 
     for step in range(num_steps):
         for i in range(N):
@@ -454,14 +480,29 @@ def _simulate_maruyama(theta_init, omega, xi, xi_next, d, dt, num_steps, phase_n
                 h = (inner_sum / (N - 1)) ** d
                 V[i] += xi_next[p, i] * h
 
+        max_abs_dtheta = 0.0
         for i in range(N):
             dtheta_i = omega[i] - sin_theta[i] * V[i]
             random_shock = np.random.randn()
             theta[i] = theta[i] + (dt * dtheta_i) + (noise_scale * random_shock)
+            if abs(dtheta_i) > max_abs_dtheta:
+                max_abs_dtheta = abs(dtheta_i)
 
         history[step + 1] = theta.copy()
 
-    return history
+        # Noise keeps the SDE trajectory moving forever in principle, but once the
+        # deterministic drift alone (dtheta_i, ignoring the noise kick) has settled
+        # for this long, further integration is just wandering near a fixed point --
+        # the same stationarity signal as the ODE case.
+        if max_abs_dtheta < stationary_eps:
+            stationary_count += 1
+            if stationary_count >= stationary_patience:
+                actual_steps = step + 1
+                break
+        else:
+            stationary_count = 0
+
+    return history[:actual_steps + 1]
 
 
 # ---------------------------------------------------------------------------
@@ -563,7 +604,12 @@ class KuramotoNetwork:
         T: Optional[float],
     ) -> Tuple[np.ndarray, np.ndarray]:
         """Shared ODE/SDE dispatch: resolve per-call overrides against the network's
-        config defaults, run the requested kernel, and return (theta_history, time)."""
+        config defaults, run the requested kernel, and return (theta_history, time).
+
+        The kernels may return fewer than num_steps+1 rows if the Stationary Break
+        Check ended the integration early (see STATIONARY_EPS/STATIONARY_PATIENCE) --
+        `time` is built to match whatever length actually came back, not blindly
+        assumed to be `num_steps+1` long."""
         mode = _default(mode, self.mode)
         seed = _default(seed, self.seed)
         T = _default(T, self.T)
@@ -581,7 +627,12 @@ class KuramotoNetwork:
         else:
             raise ValueError("mode must be either 'ode' or 'sde'")
 
-        return theta_history, self.time_vector(T)
+        actual_steps = theta_history.shape[0] - 1
+        if actual_steps == num_steps:
+            time = self.time_vector(T)
+        else:
+            time = np.linspace(0.0, actual_steps * self.dt, actual_steps + 1)
+        return theta_history, time
 
     @staticmethod
     def _default_cue_source(sequences) -> Sequence:
@@ -695,8 +746,8 @@ class KuramotoNetwork:
         self,
         result: dict,
         sequences,
-        tolerance: Optional[float] = None,
-        margin: float = 0.0,
+        margin: float,
+        tolerance: Optional[float] = None
     ) -> List[Tuple[str, int]]:
         """Online/streaming decoder: a sticky winner-take-all state machine.
 
