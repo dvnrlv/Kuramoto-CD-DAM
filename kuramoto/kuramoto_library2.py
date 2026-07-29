@@ -35,8 +35,16 @@ Three data classes, no bookkeeping between them:
                        every member shares a length, or indexed individually otherwise.
 
 `Sequence` and `MultiSequence` both expose the same trio of read-only views --
-`.xi()`, `.xi_next()`, `.labels()` -- so `KuramotoNetwork` (below) drives either one
-identically: a single stored sequence is just the one-member case of driving several.
+`.xi()`, `.xi_next()`, `.labels()` -- so the diagnostics (`overlaps`, both decoders,
+`plot`) take either one without knowing which they hold.
+
+For integration, `MultiSequence` additionally exposes the rectangular (K, P, N) pair
+`.xi_tensor()` / `.xi_next_tensor(boundary)`, putting the sequence index `a` on its own
+axis (which is why its members must then share a length P). `KuramotoNetwork._integrate`
+picks that pair for a `MultiSequence` and the plain (P, N) `.xi()` / `.xi_next(boundary)`
+for a lone `Sequence`, then runs the matching kernel -- 2D is the single-sequence sum
+over mu, 3D the multi-sequence sum over (a, mu). Kernel choice stays out of the data
+classes, which only know how to store and describe vectors.
 
 Pattern generation/mutation is *not* a method on either data class -- it lives in free
 functions (`generate_sequence`, `generate_multi_sequence`), the same way the ODE/SDE
@@ -179,6 +187,36 @@ class Sequence:
         """Spin representation (+-1) of every pattern in this sequence: cos(phase)."""
         return np.cos(self.as_matrix())
 
+    def xi_hop(self, boundary: Optional[str] = None, nhop: int = 1) -> np.ndarray:
+        """Same shape as `xi()`: row mu is the pattern that mu points *nhop steps ahead*
+        to -- row mu+nhop of `xi()`, with rows that would run off the end resolved by
+        `boundary`:
+
+        - None (default) or "self": clamped to the last row, xi^P. Every pattern within
+          nhop of the end points at the terminal pattern, so the dynamics settle there.
+          (Symmetrically, a negative `nhop` clamps at row 0.)
+        - "cycle": taken mod P, so mu -> (mu + nhop) % P -- periodic wraparound.
+
+        `nhop=1` is the ordinary successor chain and is exactly what `xi_next` returns.
+        Larger `nhop` skips intermediate patterns (mu -> mu+2 -> mu+4 ... for nhop=2);
+        `nhop=0` makes every pattern its own successor, freezing the chain; a negative
+        `nhop` runs it backwards.
+
+        Implemented as a gather through a row-index array rather than a slice-and-stack,
+        since for nhop > 1 the clamped case is no longer a single contiguous slice plus
+        one repeated row.
+        """
+        boundary = _default(boundary, "self")
+        xi = self.xi()
+        rows = np.arange(xi.shape[0])
+        if boundary == "self":
+            rows = np.clip(rows + nhop, 0, xi.shape[0] - 1)
+        elif boundary == "cycle":
+            rows = (rows + nhop) % xi.shape[0]
+        else:
+            raise ValueError("boundary must be 'self' or 'cycle'")
+        return xi[rows]
+
     def xi_next(self, boundary: Optional[str] = None) -> np.ndarray:
         """Same shape as `xi()`: row mu is the pattern mu transitions *to* -- row mu+1
         of `xi()` for every row but the last, whose successor depends on `boundary`:
@@ -186,16 +224,10 @@ class Sequence:
         - None (default) or "self": itself, xi^P -- the terminal pattern, so the
           dynamics settle there instead of cycling back to the first.
         - "cycle": row 0, xi^1 -- periodic wraparound, xi^{P+1} == xi^1.
+
+        The single-step case of `xi_hop`, which this delegates to.
         """
-        boundary = _default(boundary, "self")
-        xi = self.xi()
-        if boundary == "self":
-            successor = xi[-1:]
-        elif boundary == "cycle":
-            successor = xi[:1]
-        else:
-            raise ValueError("boundary must be 'self' or 'cycle'")
-        return np.vstack([xi[1:], successor])
+        return self.xi_hop(boundary=boundary, nhop=1)
 
     def labels(self) -> List[Tuple[str, int]]:
         """(name, position) label for every pattern, in `xi()`/`xi_next()` row order."""
@@ -309,10 +341,43 @@ class MultiSequence:
         `xi^{a,P_a+1} == xi^{a,1}` ("cycle") or `== xi^{a,P_a}` (None/"self"), so this
         needs no offset arithmetic: it's just each member's local shift-and-wrap,
         stacked in the same order as `xi(names)`."""
-        return np.concatenate([seq.xi_next(boundary) for seq in self._selected(names)], axis=0)
+        return np.concatenate([seq.xi_next(boundary=boundary) for seq in self._selected(names)], axis=0)
 
     def labels(self, names: Optional[TypingSequence[str]] = None) -> List[Tuple[str, int]]:
         return [label for seq in self._selected(names) for label in seq.labels()]
+
+    def _uniform_selected(self, names: Optional[TypingSequence[str]] = None) -> List[Sequence]:
+        """The selected sequences, requiring every one to store the same number of
+        patterns P -- the precondition for the rectangular (K, P, N) views below."""
+        seqs = self._selected(names)
+        if not seqs:
+            raise ValueError("No sequences selected.")
+        if len({len(seq) for seq in seqs}) != 1:
+            raise ValueError(
+                f"Every stored sequence must have the same length, got "
+                f"{ {seq.name: len(seq) for seq in seqs} }."
+            )
+        return seqs
+
+    def xi_tensor(self, names: Optional[TypingSequence[str]] = None) -> np.ndarray:
+        """Order-3 spin tensor, shape (K, P, N): `xi_tensor()[a, mu, i]` is neuron i of
+        pattern mu of sequence a. The sequence index `a` is an axis of the array, which
+        is what lets the kernels below write `sum_{a=1}^{K} sum_{mu=1}^{P}` as a plain
+        nested loop over the first two axes."""
+        return np.stack([seq.xi() for seq in self._uniform_selected(names)])
+
+    def xi_next_tensor(self, names: Optional[TypingSequence[str]] = None,
+                       boundary: Optional[str] = None) -> np.ndarray:
+        """Successor tensor matching `xi_tensor()`, shape (K, P, N):
+        `xi_next_tensor()[a, mu]` is what pattern mu of sequence a transitions *to*.
+
+        Each sequence's terminal pattern is resolved by that sequence's own boundary
+        condition, applied along its own `mu` axis before stacking -- so with the
+        default None/"self" the last slice self-references (`xi_next[a, P-1] ==
+        xi[a, P-1]`, the sequence settles there), and with "cycle" it wraps to that
+        same sequence's first pattern (`xi_next[a, P-1] == xi[a, 0]`). A successor is
+        never taken from a different `a`."""
+        return np.stack([seq.xi_next(boundary=boundary) for seq in self._uniform_selected(names)])
 
     def __repr__(self) -> str:
         return f"<MultiSequence | {self._order}>"
@@ -518,6 +583,133 @@ def _simulate_maruyama(theta_init, omega, xi, xi_next, d, dt, num_steps, phase_n
     return history[:actual_steps + 1]
 
 
+# --- Multi-sequence (K stored sequences, P patterns each) --------------------
+#
+# `xi`/`xi_next` here are the rectangular (K, P, N) tensors from
+# `MultiSequence.xi_tensor()` / `.xi_next_tensor()`: the sequence index `a` is axis 0
+# and the within-sequence pattern index `mu` is axis 1, so the two-index sum below is
+# just a nested loop over those two axes. Every stored sequence must have the same
+# length P (`MultiSequence` raises otherwise).
+
+@njit(cache=True, fastmath=True)
+def _multi_drive(cos_theta, xi, xi_next, d, V):
+
+    K, P, N = xi.shape
+
+    for i in range(N):
+        V[i] = 0.0
+
+    for a in range(K):                  # sum_{a=1}^{K}   -- axis 0
+        for mu in range(P):             # sum_{mu=1}^{P}  -- axis 1
+            # Overlap of the current state with pattern (a, mu), computed once and
+            # reused by all N neurons; the j != i correction is a cheap subtraction.
+            overlap = 0.0
+            for j in range(N):
+                overlap += xi[a, mu, j] * cos_theta[j]
+            for i in range(N):
+                inner_sum = overlap - xi[a, mu, i] * cos_theta[i]   # drop the j == i term
+                h = (inner_sum / (N - 1)) ** d
+                V[i] += xi_next[a, mu, i] * h
+
+
+@njit(cache=True, fastmath=True)
+def _simulate_euler_multi(theta_init, omega, xi, xi_next, d, dt, num_steps,
+                           stationary_eps=STATIONARY_EPS, stationary_patience=STATIONARY_PATIENCE):
+    """Multi-sequence ODE kernel: `_simulate_euler`'s Euler loop and Stationary Break
+    Check, driven by `_multi_drive`'s sum_a sum_mu coupling."""
+    N = theta_init.shape[0]
+
+    history = np.empty((num_steps + 1, N), dtype=np.float64)
+    theta = theta_init.copy()
+    history[0] = theta
+
+    cos_theta = np.empty(N, dtype=np.float64)
+    sin_theta = np.empty(N, dtype=np.float64)
+    V = np.empty(N, dtype=np.float64)
+
+    stationary_count = 0
+    actual_steps = num_steps
+
+    for step in range(num_steps):
+        for i in range(N):
+            cos_theta[i] = np.cos(theta[i])
+            sin_theta[i] = np.sin(theta[i])
+
+        _multi_drive(cos_theta, xi, xi_next, d, V)
+
+        max_abs_dtheta = 0.0
+        for i in range(N):
+            dtheta_i = omega[i] - sin_theta[i] * V[i]
+            theta[i] = theta[i] + dt * dtheta_i
+            if abs(dtheta_i) > max_abs_dtheta:
+                max_abs_dtheta = abs(dtheta_i)
+
+        history[step + 1] = theta.copy()
+
+        if max_abs_dtheta < stationary_eps:
+            stationary_count += 1
+            if stationary_count >= stationary_patience:
+                actual_steps = step + 1
+                break
+        else:
+            stationary_count = 0
+
+    return history[:actual_steps + 1]
+
+
+@njit(cache=True, fastmath=True)
+def _simulate_maruyama_multi(theta_init, omega, xi, xi_next, d, dt, num_steps, phase_noise, seed,
+                              stationary_eps=STATIONARY_EPS, stationary_patience=STATIONARY_PATIENCE):
+    """Multi-sequence SDE kernel: same `_multi_drive` coupling as
+    `_simulate_euler_multi`, with the per-step noise kick `_simulate_maruyama` uses."""
+    np.random.seed(seed)
+
+    N = theta_init.shape[0]
+
+    history = np.empty((num_steps + 1, N), dtype=np.float64)
+    theta = theta_init.copy()
+    history[0] = theta
+
+    cos_theta = np.empty(N, dtype=np.float64)
+    sin_theta = np.empty(N, dtype=np.float64)
+    V = np.empty(N, dtype=np.float64)
+
+    noise_scale = phase_noise * np.sqrt(dt)
+
+    stationary_count = 0
+    actual_steps = num_steps
+
+    for step in range(num_steps):
+        for i in range(N):
+            cos_theta[i] = np.cos(theta[i])
+            sin_theta[i] = np.sin(theta[i])
+
+        _multi_drive(cos_theta, xi, xi_next, d, V)
+
+        max_abs_dtheta = 0.0
+        for i in range(N):
+            dtheta_i = omega[i] - sin_theta[i] * V[i]
+            random_shock = np.random.randn()
+            theta[i] = theta[i] + (dt * dtheta_i) + (noise_scale * random_shock)
+            if abs(dtheta_i) > max_abs_dtheta:
+                max_abs_dtheta = abs(dtheta_i)
+
+        history[step + 1] = theta.copy()
+
+        # Same stationarity signal as the ODE case: the deterministic drift alone
+        # (dtheta_i, ignoring the noise kick) having settled means further integration
+        # is just wandering near a fixed point.
+        if max_abs_dtheta < stationary_eps:
+            stationary_count += 1
+            if stationary_count >= stationary_patience:
+                actual_steps = step + 1
+                break
+        else:
+            stationary_count = 0
+
+    return history[:actual_steps + 1]
+
+
 # ---------------------------------------------------------------------------
 # Network: config + omega + simulation + diagnostics + plotting
 # ---------------------------------------------------------------------------
@@ -605,15 +797,25 @@ class KuramotoNetwork:
 
     def _integrate(
         self,
-        xi: np.ndarray,
-        xi_next: np.ndarray,
+        sequences,
         theta_init: np.ndarray,
         mode: Optional[str],
         seed: Optional[int],
         T: Optional[float],
+        boundary: Optional[str],
     ) -> Tuple[np.ndarray, np.ndarray]:
         """Shared ODE/SDE dispatch: resolve per-call overrides against the network's
         config defaults, run the requested kernel, and return (theta_history, time).
+
+        Takes the `Sequence`/`MultiSequence` itself rather than pre-extracted arrays and
+        pulls the (patterns, successors) pair off it here -- both are fully determined by
+        `sequences` and `boundary`, so there's no reason for the caller to unpack them
+        only to hand both halves back.
+
+        A `MultiSequence` yields the rectangular (K, P, N) tensors and runs the
+        multi-sequence kernels; a lone `Sequence` yields its (P, N) arrays and runs the
+        single-sequence ones. That choice is made once, up front, rather than re-derived
+        from `xi.ndim` inside each `mode` branch.
 
         The kernels may return fewer than num_steps+1 rows if the Stationary Break
         Check ended the integration early (see STATIONARY_EPS/STATIONARY_PATIENCE), so
@@ -624,12 +826,22 @@ class KuramotoNetwork:
         T = _default(T, self.T)
         num_steps = self.num_steps_for(T)
 
+        # One question asked once: a MultiSequence supplies the (K, P, N) tensors and the
+        # kernels that sum over (a, mu); a lone Sequence supplies (P, N) and the kernels
+        # that sum over mu. `mode` then picks which of that pair to call.
+        if isinstance(sequences, MultiSequence):
+            xi, xi_next = sequences.xi_tensor(), sequences.xi_next_tensor(boundary=boundary)
+            ode_kernel, sde_kernel = _simulate_euler_multi, _simulate_maruyama_multi
+        else:
+            xi, xi_next = sequences.xi(), sequences.xi_next(boundary=boundary)
+            ode_kernel, sde_kernel = _simulate_euler, _simulate_maruyama
+
         if mode == "ode":
-            theta_history = _simulate_euler(
+            theta_history = ode_kernel(
                 theta_init, self.omega, xi, xi_next, self.d, self.dt, num_steps,
             )
         elif mode == "sde":
-            theta_history = _simulate_maruyama(
+            theta_history = sde_kernel(
                 theta_init, self.omega, xi, xi_next, self.d, self.dt, num_steps,
                 self.phase_noise, seed,
             )
@@ -679,6 +891,12 @@ class KuramotoNetwork:
                    (xi^{P+1} == xi^1: wraps back to the first, per-sequence). See
                    `Sequence.xi_next`.
 
+        A `MultiSequence` is driven by the multi-sequence kernels, over the rectangular
+        (K, P, N) tensors from `xi_tensor()`/`xi_next_tensor()`; every stored sequence
+        must therefore have the same length P (`MultiSequence` raises otherwise). A lone
+        `Sequence` takes the single-sequence kernels over its own (P, N) arrays, exactly
+        as before.
+
         Returns
         -------
         dict with 'time', 'theta_history', 'cue' (= (cue.name, cue_idx)), and
@@ -688,10 +906,8 @@ class KuramotoNetwork:
         """
         cue_seq = _default(cue, self._default_cue_source(sequences))
 
-        xi = sequences.xi()
-        xi_next = sequences.xi_next(boundary=boundary)
         theta_init = cue_seq.cue(cue_idx, corruption_rate=0.0)
-        theta_history, time = self._integrate(xi, xi_next, theta_init, mode, seed, T)
+        theta_history, time = self._integrate(sequences, theta_init, mode, seed, T, boundary)
 
         result = {"time": time, "theta_history": theta_history, "cue": (cue_seq.name, cue_idx)}
         result["overlaps"] = self.overlaps(theta_history, sequences)
@@ -821,7 +1037,7 @@ class KuramotoNetwork:
             _, ax = plt.subplots(figsize=(10, 5))
 
         for mu, (name, idx) in enumerate(labels):
-            ax.plot(result["time"], overlap_history[:, mu], linewidth=2.0, label=f"Overlap with {name}[{idx}]")
+            ax.plot(result["time"], overlap_history[:, mu], linewidth=2.0, label=f"{name}[{idx}]")
         cue_name, cue_idx = result["cue"]
         ax.set_title(title or f"Memory pattern overlaps (cued from corrupted '{cue_name}[{cue_idx}]')")
         ax.set_xlabel("Time (t)")
