@@ -1,2 +1,2 @@
-# CDM2026
-Context Dependent Associative Memory with Pattern Crossover
+# Hopfield-inspired Context Dependent Associative Memory Sequence Retrieval in Kuramoto DAMs
+Focusing on resolving Pattern Crossover in overlapping sequences
