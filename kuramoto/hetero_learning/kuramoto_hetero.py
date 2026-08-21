@@ -82,7 +82,7 @@ from typing import Optional, Sequence as TypingSequence, Tuple
 
 import numpy as np
 
-from kuramoto_library2 import (
+from kuramoto.kuramoto_library import (
     KuramotoNetwork,
     MultiSequence,
     STATIONARY_EPS,
@@ -411,7 +411,7 @@ class ContextNetwork(KuramotoNetwork):
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    import kuramoto_library2 as kl
+    import kuramoto.kuramoto_library as kl
 
     CONFIG = dict(dt=0.02, T=55.0, frequency_mean=0.0, frequency_std=0.03, phase_noise=0.01,
                   d=3, corruption_rate=0.2, tolerance=0.4, mode="ode")
