@@ -54,7 +54,7 @@ vectors; only the generation functions and the kernels know how to produce/evolv
 
 Typical usage
 -------------
-    CONFIG = dict(dt=0.02, T=55.0, frequency_std=0.03, phase_noise=0.01,
+    CONFIG = dict(dt=0.02, T=55.0, frequency_mean=0.0, frequency_std=0.03, phase_noise=0.01,
                   d=3, corruption_rate=0.2, tolerance=0.4, mode="ode")
     net = KuramotoNetwork(N=40, seed=10, **CONFIG)
     A = generate_sequence(N=40, seq_len=5, corruption_rate=CONFIG["corruption_rate"], name="A", seed=10)
@@ -726,8 +726,9 @@ class KuramotoNetwork:
 
     `frequency_std` (heterogeneity of the intrinsic frequencies `omega_i`) defaults to
     0.0, i.e. no natural-frequency drift -- the literal `dtheta_i/dt = -sin(theta_i) *
-    sum_mu ...` update. Set it > 0 to add omega_i ~ Normal(0, frequency_std) as a
-    persistent per-oscillator drift term, for exploring robustness to disorder.
+    sum_mu ...` update. Set it > 0 to add omega_i ~ Normal(`frequency_mean`,
+    `frequency_std`) as a persistent per-oscillator drift term, for exploring robustness
+    to disorder. `frequency_mean` (default 0.0) shifts that draw.
     """
 
     def __init__(
@@ -742,6 +743,7 @@ class KuramotoNetwork:
         tolerance: float,
         mode: str,
         frequency_std: float = 0.0,
+        frequency_mean: float = 0.0,
     ):
         self.N = N
         self.seed = seed
@@ -753,6 +755,7 @@ class KuramotoNetwork:
         self.tolerance = tolerance
         self.mode = mode
         self.frequency_std = frequency_std
+        self.frequency_mean = frequency_mean
 
         self.omega = self._make_omega()
 
@@ -763,7 +766,7 @@ class KuramotoNetwork:
 
     def _make_omega(self) -> np.ndarray:
         rng = np.random.default_rng(self.seed)
-        return rng.normal(0.0, self.frequency_std, self.N)
+        return rng.normal(self.frequency_mean, self.frequency_std, self.N)
 
     # -- generation convenience (defaults only; the logic lives in the free
     #    functions above) -------------------------------------------------------
@@ -1058,7 +1061,7 @@ if __name__ == "__main__":
     # defaults for these, precisely so a notebook's CONFIG dict is the single source
     # of truth and can't silently diverge from what the network assumes. N and seed
     # are independent variables (swept across trials), so they're passed separately.
-    CONFIG = dict(dt=0.02, T=55.0, frequency_std=0.03, phase_noise=0.01,
+    CONFIG = dict(dt=0.02, T=55.0, frequency_mean=0.0, frequency_std=0.03, phase_noise=0.01,
                   d=3, corruption_rate=0.2, tolerance=0.4, mode="ode")
 
     net = KuramotoNetwork(N=40, seed=10, **CONFIG)

@@ -47,7 +47,7 @@ There is no `boundary=` argument: what the last pattern points at is column P-1 
     import kuramoto_library2 as kl
     from kuramoto_transition import TransitionNetwork, mixed_transition
 
-    CONFIG = dict(dt=0.02, T=55.0, frequency_std=0.03, phase_noise=0.01,
+    CONFIG = dict(dt=0.02, T=55.0, frequency_mean=0.0, frequency_std=0.03, phase_noise=0.01,
                   d=3, corruption_rate=0.2, tolerance=0.4, mode="ode")
     multi = kl.generate_multi_sequence(N=40, seq_len=5, corruption_rate=0.2, count=2, seed=10)
     net = TransitionNetwork(transition=mixed_transition(len(multi[0]), gamma=0.3),
@@ -293,7 +293,7 @@ class TransitionNetwork(KuramotoNetwork):
 if __name__ == "__main__":
     import kuramoto_library2 as kl
 
-    CONFIG = dict(dt=0.02, T=55.0, frequency_std=0.03, phase_noise=0.01,
+    CONFIG = dict(dt=0.02, T=55.0, frequency_mean=0.0, frequency_std=0.03, phase_noise=0.01,
                   d=3, corruption_rate=0.2, tolerance=0.4, mode="ode")
 
     multi = kl.generate_multi_sequence(N=40, seq_len=5, corruption_rate=0.2, count=2, seed=10)
