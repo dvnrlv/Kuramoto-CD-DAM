@@ -7,7 +7,7 @@ kuramoto_context.py
 ├─ [1-95]    docstring + imports        ── 6 names from kuramoto_library2
 │
 ├─ [106-252] BUILDERS  (pure numpy, no state)
-│              term(target, lags, weight)          → (1, d+2)
+│              term(target, lags, *, weight)       → (1, d+2)
 │              self_rule / forward_rule / skip_rule → (1, d+2)
 │              bigram_rule(lag)                     → (1, d+2)
 │              multilag_rule(weights)               → (n, d+2)
@@ -54,7 +54,7 @@ and |m|^2 = m^2: the write-up's fourth-order bidegree-(2,1) fields are the d = 3
     multilag_rule           (17)  (1, (0,k,k)) summed    xi^{mu+1} m_mu sum_k w_k |m_{mu-k}|^2
     coherent_bigram_rule    (18)  (1, (0,0,1))           xi^{mu+1} m_mu^2 m_{mu-1}
     coherent_trigram_rule   (19)  (1, (0,1,2))           xi^{mu+1} m_mu m_{mu-1} m_{mu-2}
-    mixture(a*A, b*B, ...)  (14)  rows stacked           the linear mixture of its parts
+    mixture(A, B, ...)      (14)  rows stacked           the linear mixture of its parts
 
 `forward_rule()` recovers the `xi_next` dynamics exactly, so it is the baseline. The two
 rules of the write-up that are *not* here are the residual bigram (21) and the ridge
@@ -103,7 +103,7 @@ from kuramoto.kuramoto_library import (
 # pattern mu, so lag 0 is mu itself and lag 1 the pattern before it.
 # ---------------------------------------------------------------------------
 
-def term(target: int, lags: TypingSequence[int], weight: float = 1.0) -> np.ndarray:
+def term(target: int, lags: TypingSequence[int], *, weight: float = 1.0) -> np.ndarray:
     """One row: drive xi^{mu+target} with weight * prod_l m^{mu-l}, l over `lags`.
 
     The general case -- every builder below is one call to this with the lags spelled
@@ -112,33 +112,33 @@ def term(target: int, lags: TypingSequence[int], weight: float = 1.0) -> np.ndar
     return np.array([[float(target), *map(float, lags), float(weight)]])
 
 
-def self_rule(weight: float = 1.0, d: int = 3) -> np.ndarray:
+def self_rule(*, weight: float = 1.0, d: int = 3) -> np.ndarray:
     """xi^mu m_mu^d -- the autoassociative stabilizer, eq (11).
 
     Each stored pattern drives itself, which makes it something to sit in but never
     creates a sequence; the natural stabilizing term to add to a chain.
     """
-    return term(0, (0,) * d, weight)
+    return term(0, (0,) * d, weight=weight)
 
 
-def forward_rule(weight: float = 1.0, d: int = 3) -> np.ndarray:
+def forward_rule(*, weight: float = 1.0, d: int = 3) -> np.ndarray:
     """xi^{mu+1} m_mu^d -- the Markov-1 rule, eq (12).
 
     The `xi_next` dynamics of `kuramoto_library2` written as a rule, and the baseline
     every context rule is measured against.
     """
-    return term(1, (0,) * d, weight)
+    return term(1, (0,) * d, weight=weight)
 
 
-def skip_rule(nhop: int = 2, weight: float = 1.0, d: int = 3) -> np.ndarray:
+def skip_rule(nhop: int = 2, *, weight: float = 1.0, d: int = 3) -> np.ndarray:
     """xi^{mu+nhop} m_mu^d -- the skip-`nhop` rule, eq (13) at nhop = 2.
 
     Still current-state-only: it changes which pattern is driven, not what is read.
     """
-    return term(nhop, (0,) * d, weight)
+    return term(nhop, (0,) * d, weight=weight)
 
 
-def bigram_rule(lag: int = 1, weight: float = 1.0, d: int = 3) -> np.ndarray:
+def bigram_rule(lag: int = 1, *, weight: float = 1.0, d: int = 3) -> np.ndarray:
     """xi^{mu+1} m_mu |m_{mu-lag}|^{d-1} -- the magnitude-gated bigram rule, eq (16).
 
     The simplest context rule: the *next* pattern is chosen by the current overlap, but
@@ -146,10 +146,10 @@ def bigram_rule(lag: int = 1, weight: float = 1.0, d: int = 3) -> np.ndarray:
     lag = 0 this is `forward_rule` exactly, which is why `multilag_rule` can write its
     whole sum with it.
     """
-    return term(1, (0,) + (lag,) * (d - 1), weight)
+    return term(1, (0,) + (lag,) * (d - 1), weight=weight)
 
 
-def multilag_rule(weights: TypingSequence[float] = (1.0, 1.0, 1.0), d: int = 3) -> np.ndarray:
+def multilag_rule(weights: TypingSequence[float] = (1.0, 1.0, 1.0), *, d: int = 3) -> np.ndarray:
     """xi^{mu+1} m_mu sum_k w_k |m_{mu-k}|^{d-1} -- the multilag context rule, eq (17).
 
     `weights[k]` is the weight on the lag-k gate, so `weights[0]` is the ungated forward
@@ -161,23 +161,23 @@ def multilag_rule(weights: TypingSequence[float] = (1.0, 1.0, 1.0), d: int = 3) 
     return np.vstack(rows)
 
 
-def coherent_bigram_rule(lag: int = 1, weight: float = 1.0, d: int = 3) -> np.ndarray:
+def coherent_bigram_rule(lag: int = 1, *, weight: float = 1.0, d: int = 3) -> np.ndarray:
     """xi^{mu+1} m_mu^{d-1} m_{mu-lag} -- the coherent bigram rule, eq (18).
 
     `bigram_rule` with one factor moved from the gate to the drive: the lagged overlap
     enters linearly rather than squared, so its *sign* matters and not only its size.
     """
-    return term(1, (0,) * (d - 1) + (lag,), weight)
+    return term(1, (0,) * (d - 1) + (lag,), weight=weight)
 
 
-def coherent_trigram_rule(lag: int = 2, weight: float = 1.0, d: int = 3) -> np.ndarray:
+def coherent_trigram_rule(lag: int = 2, *, weight: float = 1.0, d: int = 3) -> np.ndarray:
     """xi^{mu+1} m_mu m_{mu-lag+1} m_{mu-lag} -- the coherent trigram rule, eq (19).
 
     Two-step context inside the same fourth-order budget: the three factors are read at
     three different lags, so the rule can still tell which branch the trajectory came
     from `lag` patterns ago. `lag` is that reach, and eq (19) is lag = 2.
     """
-    return term(1, (0,) * (d - 2) + (lag - 1, lag), weight)
+    return term(1, (0,) * (d - 2) + (lag - 1, lag), weight=weight)
 
 
 def unit_gain(rule: np.ndarray, corruption_rate: float) -> np.ndarray:
@@ -208,8 +208,10 @@ def unit_gain(rule: np.ndarray, corruption_rate: float) -> np.ndarray:
 def mixture(*rules: np.ndarray) -> np.ndarray:
     """Linear mixture of rules, eq (14) -- stack their rows.
 
-    The weights live in the rows themselves, so `mixture(self_rule(0.3), forward_rule())`
-    is the mixture with a_0 = 0.3 and a_1 = 1.
+    The weights live in the rows themselves, so
+    `mixture(self_rule(weight=0.3), forward_rule())` is the mixture with a_0 = 0.3 and
+    a_1 = 1. `weight` is keyword-only on every builder, since a bare positional number
+    would otherwise mean the weight on some of them and the lag on others.
     """
     return np.vstack(rules)
 
