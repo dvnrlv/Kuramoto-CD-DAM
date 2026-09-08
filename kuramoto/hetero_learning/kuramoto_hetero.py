@@ -13,7 +13,7 @@ kuramoto_context.py
 │              multilag_rule(weights)               → (n, d+2)
 │              coherent_bigram_rule(lag)            → (1, d+2)
 │              coherent_trigram_rule(lag)           → (1, d+2)
-│              unit_gain(rule, corruption_rate)     → (n, d+2)
+│              proportional_gain(rule, corruption_rate) → (n, d+2)
 │              mixture(*rules)                      → (n, d+2)
 │              expand(rule, P, boundary)            → (rows, weights)
 │
@@ -180,7 +180,7 @@ def coherent_trigram_rule(lag: int = 2, *, weight: float = 1.0, d: int = 3) -> n
     return term(1, (0,) * (d - 2) + (lag - 1, lag), weight=weight)
 
 
-def unit_gain(rule: np.ndarray, corruption_rate: float) -> np.ndarray:
+def proportional_gain(rule: np.ndarray, corruption_rate: float) -> np.ndarray:
     """Rescale every term so its gate is ~1 when the state sits on the driving pattern.
 
     The write-up carries a global coupling gain `g`; this is what has to be set for a
@@ -198,6 +198,10 @@ def unit_gain(rule: np.ndarray, corruption_rate: float) -> np.ndarray:
     scale of the drive; this is the counterpart of `lag_matrix`'s normalization of a
     transition matrix to unit total weight, and it is what makes a mixture's weights mean
     "relative contribution at the operating point".
+
+    Named for what it is -- a rescaling proportional to each term's own lag decay -- rather
+    than for a single fixed "unit" value, since the correction depends on both the rule and
+    the corruption rate it's being run at.
     """
     rule = np.atleast_2d(np.asarray(rule, dtype=np.float64)).copy()
     rule[:, -1] /= rule[:, -1].sum()                                        # weights -> shares
