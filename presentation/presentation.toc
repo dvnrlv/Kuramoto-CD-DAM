@@ -1,0 +1,7 @@
+\beamer@sectionintoc {1}{Introduction and Motivation}{3}{0}{1}
+\beamer@sectionintoc {2}{Literature Review}{8}{0}{2}
+\beamer@sectionintoc {3}{Model and Learning Rules}{10}{0}{3}
+\beamer@sectionintoc {4}{Numerical Experiments and Results}{16}{0}{4}
+\beamer@sectionintoc {5}{Theoretical Analysis}{24}{0}{5}
+\beamer@sectionintoc {6}{Conclusions and Outlook}{26}{0}{6}
+\beamer@sectionintoc {7}{Active Questions for Further Investigation}{28}{0}{7}
