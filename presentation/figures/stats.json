@@ -1,0 +1,2306 @@
+{
+ "omega_band": {
+  "forward": [
+   [
+    0.0,
+    0.6499999999999999,
+    0.04999999999999999
+   ],
+   [
+    1.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.0,
+    1.0,
+    0.0
+   ],
+   [
+    1.0,
+    1.0,
+    0.0
+   ],
+   [
+    0.2,
+    0.6699999999999999,
+    0.17916472867168917
+   ],
+   [
+    0.85,
+    0.9399999999999998,
+    0.15620499351813308
+   ],
+   [
+    0.0,
+    0.20000000000000004,
+    2.7755575615628914e-17
+   ]
+  ],
+  "bigram": [
+   [
+    0.15,
+    0.66,
+    0.28530685235374215
+   ],
+   [
+    0.75,
+    0.8800000000000001,
+    0.21118712081942875
+   ],
+   [
+    0.75,
+    0.8800000000000001,
+    0.21118712081942875
+   ],
+   [
+    0.8,
+    0.9,
+    0.2024845673131659
+   ],
+   [
+    0.8,
+    0.9,
+    0.2024845673131659
+   ],
+   [
+    0.9,
+    0.9550000000000001,
+    0.13592277219068188
+   ],
+   [
+    0.85,
+    0.9400000000000001,
+    0.14282856857085702
+   ],
+   [
+    0.45,
+    0.7999999999999999,
+    0.19235384061671348
+   ],
+   [
+    0.05,
+    0.515,
+    0.17109938632268673
+   ],
+   [
+    0.0,
+    0.20000000000000004,
+    2.7755575615628914e-17
+   ]
+  ],
+  "coh bigram": [
+   [
+    0.0,
+    0.775,
+    0.06982120021884473
+   ],
+   [
+    0.95,
+    0.975,
+    0.10897247358851686
+   ],
+   [
+    0.95,
+    0.975,
+    0.10897247358851686
+   ],
+   [
+    0.95,
+    0.975,
+    0.10897247358851686
+   ],
+   [
+    0.95,
+    0.975,
+    0.10897247358851686
+   ],
+   [
+    0.95,
+    0.9800000000000001,
+    0.08717797887081347
+   ],
+   [
+    0.85,
+    0.945,
+    0.13219304066402285
+   ],
+   [
+    0.35,
+    0.7449999999999999,
+    0.21089096708963143
+   ],
+   [
+    0.3,
+    0.6250000000000001,
+    0.2997915942784254
+   ],
+   [
+    0.0,
+    0.20000000000000004,
+    2.7755575615628914e-17
+   ]
+  ],
+  "coh trigram": [
+   [
+    0.1,
+    0.48999999999999994,
+    0.28089143810376277
+   ],
+   [
+    0.55,
+    0.7550000000000001,
+    0.3073678577860737
+   ],
+   [
+    0.55,
+    0.7550000000000001,
+    0.3073678577860737
+   ],
+   [
+    0.6,
+    0.775,
+    0.3112474899497183
+   ],
+   [
+    0.5,
+    0.76,
+    0.28
+   ],
+   [
+    0.6,
+    0.78,
+    0.28913664589601923
+   ],
+   [
+    0.55,
+    0.7849999999999999,
+    0.2815581645060217
+   ],
+   [
+    0.1,
+    0.57,
+    0.2051828452868319
+   ],
+   [
+    0.0,
+    0.37999999999999995,
+    0.10295630140987
+   ],
+   [
+    0.0,
+    0.20000000000000004,
+    2.7755575615628914e-17
+   ]
+  ],
+  "multilag": [
+   [
+    0.1,
+    0.7250000000000001,
+    0.23425413550244956
+   ],
+   [
+    0.75,
+    0.865,
+    0.23932195887548635
+   ],
+   [
+    0.75,
+    0.865,
+    0.23932195887548635
+   ],
+   [
+    0.75,
+    0.865,
+    0.23932195887548635
+   ],
+   [
+    0.75,
+    0.865,
+    0.23932195887548635
+   ],
+   [
+    0.8,
+    0.89,
+    0.22561028345356957
+   ],
+   [
+    0.8,
+    0.89,
+    0.22561028345356957
+   ],
+   [
+    0.75,
+    0.865,
+    0.23932195887548635
+   ],
+   [
+    0.7,
+    0.8550000000000001,
+    0.23764469276632294
+   ],
+   [
+    0.65,
+    0.8550000000000001,
+    0.215580611373101
+   ]
+  ],
+  "self": [
+   [
+    0.0,
+    0.10000000000000002,
+    1.3877787807814457e-17
+   ],
+   [
+    0.0,
+    0.10000000000000002,
+    1.3877787807814457e-17
+   ],
+   [
+    0.0,
+    0.10000000000000002,
+    1.3877787807814457e-17
+   ],
+   [
+    0.0,
+    0.10000000000000002,
+    1.3877787807814457e-17
+   ],
+   [
+    0.0,
+    0.10000000000000002,
+    1.3877787807814457e-17
+   ],
+   [
+    0.0,
+    0.10000000000000002,
+    1.3877787807814457e-17
+   ],
+   [
+    0.0,
+    0.12000000000000002,
+    0.04
+   ],
+   [
+    0.0,
+    0.4050000000000001,
+    0.180208212909401
+   ],
+   [
+    0.0,
+    0.13000000000000003,
+    0.045825756949558406
+   ],
+   [
+    0.0,
+    0.10000000000000002,
+    1.3877787807814457e-17
+   ]
+  ]
+ },
+ "benchmark": {
+  "2-1-2|raw": {
+   "self": {
+    "correct": 0.0,
+    "crossed": 0.0,
+    "incomplete": 1.0,
+    "branch": 0.575,
+    "branch_se": 0.07816249100431741,
+    "overlap": NaN,
+    "overlap_sd": NaN
+   },
+   "forward": {
+    "correct": 0.5,
+    "crossed": 0.475,
+    "incomplete": 0.025,
+    "branch": 0.55,
+    "branch_se": 0.07866066361276136,
+    "overlap": 0.8814944054375895,
+    "overlap_sd": 0.0135474757265863
+   },
+   "skip-two": {
+    "correct": 0.025,
+    "crossed": 0.3,
+    "incomplete": 0.675,
+    "branch": 0.8,
+    "branch_se": 0.06324555320336758,
+    "overlap": 0.8200911121319135,
+    "overlap_sd": 0.0
+   },
+   "self+forward": {
+    "correct": 0.2,
+    "crossed": 0.225,
+    "incomplete": 0.575,
+    "branch": 0.525,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.9038784591746152,
+    "overlap_sd": 0.013997912641508261
+   },
+   "forward+skip2": {
+    "correct": 0.425,
+    "crossed": 0.4,
+    "incomplete": 0.175,
+    "branch": 0.625,
+    "branch_se": 0.07654655446197431,
+    "overlap": 0.8828547750239059,
+    "overlap_sd": 0.011933148472666374
+   },
+   "bigram": {
+    "correct": 0.525,
+    "crossed": 0.3,
+    "incomplete": 0.175,
+    "branch": 0.8,
+    "branch_se": 0.06324555320336758,
+    "overlap": 0.809540827835124,
+    "overlap_sd": 0.02406758046159103
+   },
+   "multilag": {
+    "correct": 0.45,
+    "crossed": 0.325,
+    "incomplete": 0.225,
+    "branch": 0.7,
+    "branch_se": 0.07245688373094719,
+    "overlap": 0.9065403232131273,
+    "overlap_sd": 0.009593868155381933
+   },
+   "coh bigram": {
+    "correct": 0.475,
+    "crossed": 0.35,
+    "incomplete": 0.175,
+    "branch": 0.725,
+    "branch_se": 0.07060010623221469,
+    "overlap": 0.8528232712433846,
+    "overlap_sd": 0.018795652628975614
+   },
+   "coh trigram": {
+    "correct": 0.45,
+    "crossed": 0.125,
+    "incomplete": 0.425,
+    "branch": 0.925,
+    "branch_se": 0.041645828122394195,
+    "overlap": 0.7871462839903034,
+    "overlap_sd": 0.0216319271661276
+   }
+  },
+  "2-1-2|gain": {
+   "self": {
+    "correct": 0.0,
+    "crossed": 0.0,
+    "incomplete": 1.0,
+    "branch": 0.575,
+    "branch_se": 0.07816249100431741,
+    "overlap": NaN,
+    "overlap_sd": NaN
+   },
+   "forward": {
+    "correct": 0.5,
+    "crossed": 0.475,
+    "incomplete": 0.025,
+    "branch": 0.55,
+    "branch_se": 0.07866066361276136,
+    "overlap": 0.8814944054375895,
+    "overlap_sd": 0.0135474757265863
+   },
+   "skip-two": {
+    "correct": 0.025,
+    "crossed": 0.3,
+    "incomplete": 0.675,
+    "branch": 0.8,
+    "branch_se": 0.06324555320336758,
+    "overlap": 0.8200911121319135,
+    "overlap_sd": 0.0
+   },
+   "self+forward": {
+    "correct": 0.3,
+    "crossed": 0.35,
+    "incomplete": 0.35,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": 0.8895039695862019,
+    "overlap_sd": 0.012758229122234618
+   },
+   "forward+skip2": {
+    "correct": 0.35,
+    "crossed": 0.375,
+    "incomplete": 0.275,
+    "branch": 0.675,
+    "branch_se": 0.07405656621799311,
+    "overlap": 0.8613855708456758,
+    "overlap_sd": 0.014593968426234845
+   },
+   "bigram": {
+    "correct": 0.525,
+    "crossed": 0.275,
+    "incomplete": 0.2,
+    "branch": 0.725,
+    "branch_se": 0.07060010623221469,
+    "overlap": 0.8984230442242062,
+    "overlap_sd": 0.00961063899441006
+   },
+   "multilag": {
+    "correct": 0.525,
+    "crossed": 0.25,
+    "incomplete": 0.225,
+    "branch": 0.775,
+    "branch_se": 0.06602556323122129,
+    "overlap": 0.8948447539314761,
+    "overlap_sd": 0.009033224753885061
+   },
+   "coh bigram": {
+    "correct": 0.5,
+    "crossed": 0.35,
+    "incomplete": 0.15,
+    "branch": 0.7,
+    "branch_se": 0.07245688373094719,
+    "overlap": 0.8946576699407609,
+    "overlap_sd": 0.01038595364280965
+   },
+   "coh trigram": {
+    "correct": 0.575,
+    "crossed": 0.2,
+    "incomplete": 0.225,
+    "branch": 0.8,
+    "branch_se": 0.06324555320336758,
+    "overlap": 0.8981073704136293,
+    "overlap_sd": 0.008784623582534368
+   }
+  },
+  "2-2-2|raw": {
+   "self": {
+    "correct": 0.0,
+    "crossed": 0.0,
+    "incomplete": 1.0,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": NaN,
+    "overlap_sd": NaN
+   },
+   "forward": {
+    "correct": 0.35,
+    "crossed": 0.55,
+    "incomplete": 0.1,
+    "branch": 0.45,
+    "branch_se": 0.07866066361276136,
+    "overlap": 0.8824566582376997,
+    "overlap_sd": 0.011429161581337069
+   },
+   "skip-two": {
+    "correct": 0.0,
+    "crossed": 0.575,
+    "incomplete": 0.425,
+    "branch": 0.55,
+    "branch_se": 0.07866066361276136,
+    "overlap": NaN,
+    "overlap_sd": NaN
+   },
+   "self+forward": {
+    "correct": 0.225,
+    "crossed": 0.25,
+    "incomplete": 0.525,
+    "branch": 0.525,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.9034295417170907,
+    "overlap_sd": 0.010224001117115937
+   },
+   "forward+skip2": {
+    "correct": 0.35,
+    "crossed": 0.5,
+    "incomplete": 0.15,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": 0.8802153806839543,
+    "overlap_sd": 0.008572880416529871
+   },
+   "bigram": {
+    "correct": 0.275,
+    "crossed": 0.525,
+    "incomplete": 0.2,
+    "branch": 0.475,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.7916943379262708,
+    "overlap_sd": 0.028401976059555186
+   },
+   "multilag": {
+    "correct": 0.375,
+    "crossed": 0.375,
+    "incomplete": 0.25,
+    "branch": 0.55,
+    "branch_se": 0.07866066361276136,
+    "overlap": 0.8945286240757458,
+    "overlap_sd": 0.026463431298437687
+   },
+   "coh bigram": {
+    "correct": 0.325,
+    "crossed": 0.575,
+    "incomplete": 0.1,
+    "branch": 0.475,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.8446862449946233,
+    "overlap_sd": 0.015015495244265833
+   },
+   "coh trigram": {
+    "correct": 0.275,
+    "crossed": 0.425,
+    "incomplete": 0.3,
+    "branch": 0.65,
+    "branch_se": 0.07541551564499178,
+    "overlap": 0.7830450754826941,
+    "overlap_sd": 0.018531423115262933
+   }
+  },
+  "2-2-2|gain": {
+   "self": {
+    "correct": 0.0,
+    "crossed": 0.0,
+    "incomplete": 1.0,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": NaN,
+    "overlap_sd": NaN
+   },
+   "forward": {
+    "correct": 0.35,
+    "crossed": 0.55,
+    "incomplete": 0.1,
+    "branch": 0.45,
+    "branch_se": 0.07866066361276136,
+    "overlap": 0.8824566582376997,
+    "overlap_sd": 0.011429161581337069
+   },
+   "skip-two": {
+    "correct": 0.0,
+    "crossed": 0.575,
+    "incomplete": 0.425,
+    "branch": 0.55,
+    "branch_se": 0.07866066361276136,
+    "overlap": NaN,
+    "overlap_sd": NaN
+   },
+   "self+forward": {
+    "correct": 0.225,
+    "crossed": 0.275,
+    "incomplete": 0.5,
+    "branch": 0.525,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.887770857071394,
+    "overlap_sd": 0.010344038476725322
+   },
+   "forward+skip2": {
+    "correct": 0.35,
+    "crossed": 0.55,
+    "incomplete": 0.1,
+    "branch": 0.475,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.8554329980100296,
+    "overlap_sd": 0.010075333644943518
+   },
+   "bigram": {
+    "correct": 0.3,
+    "crossed": 0.525,
+    "incomplete": 0.175,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": 0.8944345258792749,
+    "overlap_sd": 0.007879067644256985
+   },
+   "multilag": {
+    "correct": 0.35,
+    "crossed": 0.35,
+    "incomplete": 0.3,
+    "branch": 0.675,
+    "branch_se": 0.07405656621799311,
+    "overlap": 0.8907729039475997,
+    "overlap_sd": 0.027316212020397752
+   },
+   "coh bigram": {
+    "correct": 0.325,
+    "crossed": 0.525,
+    "incomplete": 0.15,
+    "branch": 0.45,
+    "branch_se": 0.07866066361276136,
+    "overlap": 0.8896129447718865,
+    "overlap_sd": 0.008130600162918887
+   },
+   "coh trigram": {
+    "correct": 0.4,
+    "crossed": 0.35,
+    "incomplete": 0.25,
+    "branch": 0.65,
+    "branch_se": 0.07541551564499178,
+    "overlap": 0.8952304443983927,
+    "overlap_sd": 0.025901851538331085
+   }
+  },
+  "2-3-2|raw": {
+   "self": {
+    "correct": 0.0,
+    "crossed": 0.0,
+    "incomplete": 1.0,
+    "branch": 0.4,
+    "branch_se": 0.07745966692414834,
+    "overlap": NaN,
+    "overlap_sd": NaN
+   },
+   "forward": {
+    "correct": 0.375,
+    "crossed": 0.525,
+    "incomplete": 0.1,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": 0.8810463613981077,
+    "overlap_sd": 0.010932107390438662
+   },
+   "skip-two": {
+    "correct": 0.025,
+    "crossed": 0.6,
+    "incomplete": 0.375,
+    "branch": 0.375,
+    "branch_se": 0.07654655446197431,
+    "overlap": 0.8073594625467386,
+    "overlap_sd": 0.0
+   },
+   "self+forward": {
+    "correct": 0.0,
+    "crossed": 0.075,
+    "incomplete": 0.925,
+    "branch": 0.525,
+    "branch_se": 0.07895805848676878,
+    "overlap": NaN,
+    "overlap_sd": NaN
+   },
+   "forward+skip2": {
+    "correct": 0.35,
+    "crossed": 0.475,
+    "incomplete": 0.175,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": 0.8718829282734124,
+    "overlap_sd": 0.009389825639928762
+   },
+   "bigram": {
+    "correct": 0.225,
+    "crossed": 0.55,
+    "incomplete": 0.225,
+    "branch": 0.45,
+    "branch_se": 0.07866066361276136,
+    "overlap": 0.7856917715175579,
+    "overlap_sd": 0.022217030961786163
+   },
+   "multilag": {
+    "correct": 0.325,
+    "crossed": 0.45,
+    "incomplete": 0.225,
+    "branch": 0.525,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.8971844381922437,
+    "overlap_sd": 0.0105199115713472
+   },
+   "coh bigram": {
+    "correct": 0.3,
+    "crossed": 0.425,
+    "incomplete": 0.275,
+    "branch": 0.475,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.8388636735122191,
+    "overlap_sd": 0.022585439305134108
+   },
+   "coh trigram": {
+    "correct": 0.125,
+    "crossed": 0.6,
+    "incomplete": 0.275,
+    "branch": 0.425,
+    "branch_se": 0.07816249100431741,
+    "overlap": 0.7699539881977027,
+    "overlap_sd": 0.021466669639417894
+   }
+  },
+  "2-3-2|gain": {
+   "self": {
+    "correct": 0.0,
+    "crossed": 0.0,
+    "incomplete": 1.0,
+    "branch": 0.4,
+    "branch_se": 0.07745966692414834,
+    "overlap": NaN,
+    "overlap_sd": NaN
+   },
+   "forward": {
+    "correct": 0.375,
+    "crossed": 0.525,
+    "incomplete": 0.1,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": 0.8810463613981077,
+    "overlap_sd": 0.010932107390438662
+   },
+   "skip-two": {
+    "correct": 0.025,
+    "crossed": 0.6,
+    "incomplete": 0.375,
+    "branch": 0.375,
+    "branch_se": 0.07654655446197431,
+    "overlap": 0.8073594625467386,
+    "overlap_sd": 0.0
+   },
+   "self+forward": {
+    "correct": 0.025,
+    "crossed": 0.1,
+    "incomplete": 0.875,
+    "branch": 0.475,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.8721897344354052,
+    "overlap_sd": 0.0
+   },
+   "forward+skip2": {
+    "correct": 0.225,
+    "crossed": 0.575,
+    "incomplete": 0.2,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": 0.8529656830557056,
+    "overlap_sd": 0.01057951936361562
+   },
+   "bigram": {
+    "correct": 0.325,
+    "crossed": 0.475,
+    "incomplete": 0.2,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": 0.8894389259768396,
+    "overlap_sd": 0.008442120054618642
+   },
+   "multilag": {
+    "correct": 0.3,
+    "crossed": 0.425,
+    "incomplete": 0.275,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": 0.8880627296780584,
+    "overlap_sd": 0.010822374026589025
+   },
+   "coh bigram": {
+    "correct": 0.4,
+    "crossed": 0.425,
+    "incomplete": 0.175,
+    "branch": 0.525,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.8865535827784672,
+    "overlap_sd": 0.010339825481772936
+   },
+   "coh trigram": {
+    "correct": 0.3,
+    "crossed": 0.5,
+    "incomplete": 0.2,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": 0.893632426264512,
+    "overlap_sd": 0.010247856263208874
+   }
+  }
+ },
+ "branch_vs_N": {
+  "2-1-2|50": {
+   "forward": {
+    "branch": 0.525,
+    "se": 0.07895805848676878,
+    "incomplete": 0.125,
+    "correct": 0.45
+   },
+   "bigram": {
+    "branch": 0.725,
+    "se": 0.07060010623221469,
+    "incomplete": 0.1,
+    "correct": 0.55
+   },
+   "coh bigram": {
+    "branch": 0.675,
+    "se": 0.07405656621799311,
+    "incomplete": 0.075,
+    "correct": 0.55
+   },
+   "coh trigram": {
+    "branch": 0.875,
+    "se": 0.05229125165837972,
+    "incomplete": 0.275,
+    "correct": 0.45
+   },
+   "multilag": {
+    "branch": 0.65,
+    "se": 0.07541551564499178,
+    "incomplete": 0.2,
+    "correct": 0.475
+   }
+  },
+  "2-1-2|100": {
+   "forward": {
+    "branch": 0.55,
+    "se": 0.07866066361276136,
+    "incomplete": 0.025,
+    "correct": 0.5
+   },
+   "bigram": {
+    "branch": 0.8,
+    "se": 0.06324555320336758,
+    "incomplete": 0.175,
+    "correct": 0.525
+   },
+   "coh bigram": {
+    "branch": 0.725,
+    "se": 0.07060010623221469,
+    "incomplete": 0.175,
+    "correct": 0.475
+   },
+   "coh trigram": {
+    "branch": 0.925,
+    "se": 0.041645828122394195,
+    "incomplete": 0.425,
+    "correct": 0.45
+   },
+   "multilag": {
+    "branch": 0.7,
+    "se": 0.07245688373094719,
+    "incomplete": 0.225,
+    "correct": 0.45
+   }
+  },
+  "2-1-2|200": {
+   "forward": {
+    "branch": 0.55,
+    "se": 0.07866066361276136,
+    "incomplete": 0.0,
+    "correct": 0.525
+   },
+   "bigram": {
+    "branch": 1.0,
+    "se": 0.0,
+    "incomplete": 0.325,
+    "correct": 0.625
+   },
+   "coh bigram": {
+    "branch": 0.925,
+    "se": 0.041645828122394195,
+    "incomplete": 0.125,
+    "correct": 0.7
+   },
+   "coh trigram": {
+    "branch": 1.0,
+    "se": 0.0,
+    "incomplete": 0.475,
+    "correct": 0.5
+   },
+   "multilag": {
+    "branch": 0.825,
+    "se": 0.06007807420348958,
+    "incomplete": 0.125,
+    "correct": 0.675
+   }
+  },
+  "2-1-2|400": {
+   "forward": {
+    "branch": 0.5,
+    "se": 0.07905694150420949,
+    "incomplete": 0.025,
+    "correct": 0.45
+   },
+   "bigram": {
+    "branch": 0.975,
+    "se": 0.024685522072664386,
+    "incomplete": 0.275,
+    "correct": 0.65
+   },
+   "coh bigram": {
+    "branch": 0.875,
+    "se": 0.05229125165837972,
+    "incomplete": 0.125,
+    "correct": 0.65
+   },
+   "coh trigram": {
+    "branch": 1.0,
+    "se": 0.0,
+    "incomplete": 0.425,
+    "correct": 0.575
+   },
+   "multilag": {
+    "branch": 0.775,
+    "se": 0.06602556323122129,
+    "incomplete": 0.125,
+    "correct": 0.65
+   }
+  },
+  "2-2-2|50": {
+   "forward": {
+    "branch": 0.45,
+    "se": 0.07866066361276136,
+    "incomplete": 0.175,
+    "correct": 0.325
+   },
+   "bigram": {
+    "branch": 0.55,
+    "se": 0.07866066361276136,
+    "incomplete": 0.1,
+    "correct": 0.35
+   },
+   "coh bigram": {
+    "branch": 0.5,
+    "se": 0.07905694150420949,
+    "incomplete": 0.05,
+    "correct": 0.425
+   },
+   "coh trigram": {
+    "branch": 0.65,
+    "se": 0.07541551564499178,
+    "incomplete": 0.2,
+    "correct": 0.45
+   },
+   "multilag": {
+    "branch": 0.5,
+    "se": 0.07905694150420949,
+    "incomplete": 0.175,
+    "correct": 0.375
+   }
+  },
+  "2-2-2|100": {
+   "forward": {
+    "branch": 0.45,
+    "se": 0.07866066361276136,
+    "incomplete": 0.1,
+    "correct": 0.35
+   },
+   "bigram": {
+    "branch": 0.475,
+    "se": 0.07895805848676878,
+    "incomplete": 0.2,
+    "correct": 0.275
+   },
+   "coh bigram": {
+    "branch": 0.475,
+    "se": 0.07895805848676878,
+    "incomplete": 0.1,
+    "correct": 0.325
+   },
+   "coh trigram": {
+    "branch": 0.65,
+    "se": 0.07541551564499178,
+    "incomplete": 0.3,
+    "correct": 0.275
+   },
+   "multilag": {
+    "branch": 0.55,
+    "se": 0.07866066361276136,
+    "incomplete": 0.25,
+    "correct": 0.375
+   }
+  },
+  "2-2-2|200": {
+   "forward": {
+    "branch": 0.55,
+    "se": 0.07866066361276136,
+    "incomplete": 0.05,
+    "correct": 0.525
+   },
+   "bigram": {
+    "branch": 0.525,
+    "se": 0.07895805848676878,
+    "incomplete": 0.15,
+    "correct": 0.375
+   },
+   "coh bigram": {
+    "branch": 0.55,
+    "se": 0.07866066361276136,
+    "incomplete": 0.05,
+    "correct": 0.525
+   },
+   "coh trigram": {
+    "branch": 0.8,
+    "se": 0.06324555320336758,
+    "incomplete": 0.325,
+    "correct": 0.35
+   },
+   "multilag": {
+    "branch": 0.7,
+    "se": 0.07245688373094719,
+    "incomplete": 0.025,
+    "correct": 0.65
+   }
+  },
+  "2-2-2|400": {
+   "forward": {
+    "branch": 0.45,
+    "se": 0.07866066361276136,
+    "incomplete": 0.0,
+    "correct": 0.475
+   },
+   "bigram": {
+    "branch": 0.55,
+    "se": 0.07866066361276136,
+    "incomplete": 0.25,
+    "correct": 0.225
+   },
+   "coh bigram": {
+    "branch": 0.5,
+    "se": 0.07905694150420949,
+    "incomplete": 0.075,
+    "correct": 0.325
+   },
+   "coh trigram": {
+    "branch": 0.825,
+    "se": 0.06007807420348958,
+    "incomplete": 0.625,
+    "correct": 0.2
+   },
+   "multilag": {
+    "branch": 0.55,
+    "se": 0.07866066361276136,
+    "incomplete": 0.075,
+    "correct": 0.475
+   }
+  },
+  "2-3-2|50": {
+   "forward": {
+    "branch": 0.525,
+    "se": 0.07895805848676878,
+    "incomplete": 0.1,
+    "correct": 0.425
+   },
+   "bigram": {
+    "branch": 0.5,
+    "se": 0.07905694150420949,
+    "incomplete": 0.125,
+    "correct": 0.325
+   },
+   "coh bigram": {
+    "branch": 0.425,
+    "se": 0.07816249100431741,
+    "incomplete": 0.125,
+    "correct": 0.3
+   },
+   "coh trigram": {
+    "branch": 0.5,
+    "se": 0.07905694150420949,
+    "incomplete": 0.125,
+    "correct": 0.25
+   },
+   "multilag": {
+    "branch": 0.5,
+    "se": 0.07905694150420949,
+    "incomplete": 0.225,
+    "correct": 0.3
+   }
+  },
+  "2-3-2|100": {
+   "forward": {
+    "branch": 0.5,
+    "se": 0.07905694150420949,
+    "incomplete": 0.1,
+    "correct": 0.375
+   },
+   "bigram": {
+    "branch": 0.45,
+    "se": 0.07866066361276136,
+    "incomplete": 0.225,
+    "correct": 0.225
+   },
+   "coh bigram": {
+    "branch": 0.475,
+    "se": 0.07895805848676878,
+    "incomplete": 0.275,
+    "correct": 0.3
+   },
+   "coh trigram": {
+    "branch": 0.425,
+    "se": 0.07816249100431741,
+    "incomplete": 0.275,
+    "correct": 0.125
+   },
+   "multilag": {
+    "branch": 0.525,
+    "se": 0.07895805848676878,
+    "incomplete": 0.225,
+    "correct": 0.325
+   }
+  },
+  "2-3-2|200": {
+   "forward": {
+    "branch": 0.5,
+    "se": 0.07905694150420949,
+    "incomplete": 0.075,
+    "correct": 0.475
+   },
+   "bigram": {
+    "branch": 0.475,
+    "se": 0.07895805848676878,
+    "incomplete": 0.25,
+    "correct": 0.25
+   },
+   "coh bigram": {
+    "branch": 0.55,
+    "se": 0.07866066361276136,
+    "incomplete": 0.125,
+    "correct": 0.4
+   },
+   "coh trigram": {
+    "branch": 0.525,
+    "se": 0.07895805848676878,
+    "incomplete": 0.4,
+    "correct": 0.2
+   },
+   "multilag": {
+    "branch": 0.525,
+    "se": 0.07895805848676878,
+    "incomplete": 0.175,
+    "correct": 0.35
+   }
+  },
+  "2-3-2|400": {
+   "forward": {
+    "branch": 0.45,
+    "se": 0.07866066361276136,
+    "incomplete": 0.025,
+    "correct": 0.5
+   },
+   "bigram": {
+    "branch": 0.55,
+    "se": 0.07866066361276136,
+    "incomplete": 0.275,
+    "correct": 0.25
+   },
+   "coh bigram": {
+    "branch": 0.575,
+    "se": 0.07816249100431741,
+    "incomplete": 0.075,
+    "correct": 0.45
+   },
+   "coh trigram": {
+    "branch": 0.6,
+    "se": 0.07745966692414834,
+    "incomplete": 0.45,
+    "correct": 0.15
+   },
+   "multilag": {
+    "branch": 0.5,
+    "se": 0.07905694150420949,
+    "incomplete": 0.075,
+    "correct": 0.4
+   }
+  }
+ },
+ "seed_sweep": {
+  "2-1-2": {
+   "self": {
+    "correct": 0.0,
+    "branch": 0.475,
+    "branch_se": 0.035311117229563836,
+    "overlap": NaN,
+    "overlap_sd": NaN
+   },
+   "forward": {
+    "correct": 0.37,
+    "branch": 0.5,
+    "branch_se": 0.035355339059327376,
+    "overlap": 0.8619542456472761,
+    "overlap_sd": 0.0520931703511922
+   },
+   "skip-two": {
+    "correct": 0.045,
+    "branch": 0.785,
+    "branch_se": 0.02904952667428507,
+    "overlap": 0.8769439077416514,
+    "overlap_sd": 0.0327362602854129
+   },
+   "self+forward": {
+    "correct": 0.225,
+    "branch": 0.515,
+    "branch_se": 0.03533942557541082,
+    "overlap": 0.8771440430858246,
+    "overlap_sd": 0.026010693497576707
+   },
+   "forward+skip2": {
+    "correct": 0.46,
+    "branch": 0.71,
+    "branch_se": 0.03208582241426889,
+    "overlap": 0.8698595514589124,
+    "overlap_sd": 0.030814378027464565
+   },
+   "bigram": {
+    "correct": 0.525,
+    "branch": 0.845,
+    "branch_se": 0.02559052559053839,
+    "overlap": 0.8078953959493479,
+    "overlap_sd": 0.06422531253638589
+   },
+   "multilag": {
+    "correct": 0.47,
+    "branch": 0.785,
+    "branch_se": 0.02904952667428507,
+    "overlap": 0.8866468658182473,
+    "overlap_sd": 0.02488688349952881
+   },
+   "coh bigram": {
+    "correct": 0.555,
+    "branch": 0.79,
+    "branch_se": 0.028801041647829335,
+    "overlap": 0.8248891768514227,
+    "overlap_sd": 0.06694071844485905
+   },
+   "coh trigram": {
+    "correct": 0.435,
+    "branch": 0.86,
+    "branch_se": 0.024535688292770596,
+    "overlap": 0.7903928844191688,
+    "overlap_sd": 0.05612554185020115
+   }
+  },
+  "2-2-2": {
+   "self": {
+    "correct": 0.0,
+    "branch": 0.475,
+    "branch_se": 0.035311117229563836,
+    "overlap": NaN,
+    "overlap_sd": NaN
+   },
+   "forward": {
+    "correct": 0.335,
+    "branch": 0.5,
+    "branch_se": 0.035355339059327376,
+    "overlap": 0.8637027171928341,
+    "overlap_sd": 0.04871484756312772
+   },
+   "skip-two": {
+    "correct": 0.015,
+    "branch": 0.525,
+    "branch_se": 0.035311117229563836,
+    "overlap": 0.8511662848004234,
+    "overlap_sd": 0.031013652031919563
+   },
+   "self+forward": {
+    "correct": 0.19,
+    "branch": 0.485,
+    "branch_se": 0.03533942557541082,
+    "overlap": 0.8786801256702294,
+    "overlap_sd": 0.02344478250428859
+   },
+   "forward+skip2": {
+    "correct": 0.35,
+    "branch": 0.525,
+    "branch_se": 0.035311117229563836,
+    "overlap": 0.8740958439173883,
+    "overlap_sd": 0.033801334146633326
+   },
+   "bigram": {
+    "correct": 0.3,
+    "branch": 0.55,
+    "branch_se": 0.03517811819867572,
+    "overlap": 0.8116956506915365,
+    "overlap_sd": 0.06388286137360775
+   },
+   "multilag": {
+    "correct": 0.34,
+    "branch": 0.58,
+    "branch_se": 0.034899856733230296,
+    "overlap": 0.8946149977186646,
+    "overlap_sd": 0.028751247550399508
+   },
+   "coh bigram": {
+    "correct": 0.31,
+    "branch": 0.535,
+    "branch_se": 0.03526861210765175,
+    "overlap": 0.8397213473448608,
+    "overlap_sd": 0.06153320667241261
+   },
+   "coh trigram": {
+    "correct": 0.25,
+    "branch": 0.71,
+    "branch_se": 0.03208582241426889,
+    "overlap": 0.7950831636901933,
+    "overlap_sd": 0.058167237908746734
+   }
+  },
+  "2-3-2": {
+   "self": {
+    "correct": 0.0,
+    "branch": 0.52,
+    "branch_se": 0.03532704346531139,
+    "overlap": NaN,
+    "overlap_sd": NaN
+   },
+   "forward": {
+    "correct": 0.3,
+    "branch": 0.51,
+    "branch_se": 0.03534826728426727,
+    "overlap": 0.8586668248586702,
+    "overlap_sd": 0.04343637440773127
+   },
+   "skip-two": {
+    "correct": 0.03,
+    "branch": 0.475,
+    "branch_se": 0.035311117229563836,
+    "overlap": 0.8612499755267988,
+    "overlap_sd": 0.038780374829829246
+   },
+   "self+forward": {
+    "correct": 0.18,
+    "branch": 0.515,
+    "branch_se": 0.03533942557541082,
+    "overlap": 0.8760409142874602,
+    "overlap_sd": 0.021758348228061376
+   },
+   "forward+skip2": {
+    "correct": 0.23,
+    "branch": 0.47,
+    "branch_se": 0.03529164207004259,
+    "overlap": 0.8632527573273702,
+    "overlap_sd": 0.023949353421903314
+   },
+   "bigram": {
+    "correct": 0.195,
+    "branch": 0.435,
+    "branch_se": 0.03505531343462785,
+    "overlap": 0.8141011236580755,
+    "overlap_sd": 0.06611867781999407
+   },
+   "multilag": {
+    "correct": 0.21,
+    "branch": 0.465,
+    "branch_se": 0.03526861210765175,
+    "overlap": 0.8846467027689978,
+    "overlap_sd": 0.02657408130797992
+   },
+   "coh bigram": {
+    "correct": 0.235,
+    "branch": 0.465,
+    "branch_se": 0.03526861210765175,
+    "overlap": 0.8254508489279877,
+    "overlap_sd": 0.06704179135515559
+   },
+   "coh trigram": {
+    "correct": 0.13,
+    "branch": 0.47,
+    "branch_se": 0.03529164207004259,
+    "overlap": 0.803692823941397,
+    "overlap_sd": 0.060148344778250366
+   }
+  }
+ },
+ "N_sweep": {
+  "disorder $\\sigma_\\omega=0.3$": {
+   "20": {
+    "self": 0.12500000000000003,
+    "forward": 0.5349999999999999,
+    "bigram": 0.41500000000000004,
+    "coh bigram": 0.5599999999999999,
+    "coh trigram": 0.29,
+    "multilag": 0.33999999999999997
+   },
+   "60": {
+    "self": 0.10000000000000002,
+    "forward": 0.8800000000000001,
+    "bigram": 0.5349999999999999,
+    "coh bigram": 0.685,
+    "coh trigram": 0.41500000000000004,
+    "multilag": 0.645
+   },
+   "100": {
+    "self": 0.10500000000000002,
+    "forward": 0.9550000000000001,
+    "bigram": 0.6399999999999999,
+    "coh bigram": 0.8699999999999999,
+    "coh trigram": 0.5,
+    "multilag": 0.915
+   },
+   "150": {
+    "self": 0.11000000000000003,
+    "forward": 0.985,
+    "bigram": 0.78,
+    "coh bigram": 0.915,
+    "coh trigram": 0.5549999999999999,
+    "multilag": 0.89
+   },
+   "200": {
+    "self": 0.12500000000000003,
+    "forward": 0.99,
+    "bigram": 0.735,
+    "coh bigram": 0.8700000000000001,
+    "coh trigram": 0.45499999999999996,
+    "multilag": 0.9400000000000001
+   },
+   "300": {
+    "self": 0.10000000000000002,
+    "forward": 1.0,
+    "bigram": 0.9099999999999999,
+    "coh bigram": 0.96,
+    "coh trigram": 0.5750000000000001,
+    "multilag": 1.0
+   },
+   "400": {
+    "self": 0.10000000000000002,
+    "forward": 1.0,
+    "bigram": 0.85,
+    "coh bigram": 0.975,
+    "coh trigram": 0.595,
+    "multilag": 0.97
+   }
+  },
+  "constant $\\omega=0.05$": {
+   "20": {
+    "self": 0.10000000000000002,
+    "forward": 0.5650000000000001,
+    "bigram": 0.46499999999999997,
+    "coh bigram": 0.57,
+    "coh trigram": 0.36,
+    "multilag": 0.37499999999999994
+   },
+   "60": {
+    "self": 0.10000000000000002,
+    "forward": 0.9200000000000002,
+    "bigram": 0.8150000000000001,
+    "coh bigram": 0.8600000000000001,
+    "coh trigram": 0.52,
+    "multilag": 0.6900000000000001
+   },
+   "100": {
+    "self": 0.10000000000000002,
+    "forward": 1.0,
+    "bigram": 0.86,
+    "coh bigram": 0.945,
+    "coh trigram": 0.755,
+    "multilag": 0.875
+   },
+   "150": {
+    "self": 0.10000000000000002,
+    "forward": 1.0,
+    "bigram": 0.96,
+    "coh bigram": 0.9650000000000001,
+    "coh trigram": 0.9199999999999999,
+    "multilag": 0.9349999999999999
+   },
+   "200": {
+    "self": 0.10000000000000002,
+    "forward": 1.0,
+    "bigram": 1.0,
+    "coh bigram": 1.0,
+    "coh trigram": 0.95,
+    "multilag": 1.0
+   },
+   "300": {
+    "self": 0.10000000000000002,
+    "forward": 1.0,
+    "bigram": 1.0,
+    "coh bigram": 1.0,
+    "coh trigram": 1.0,
+    "multilag": 1.0
+   },
+   "400": {
+    "self": 0.10000000000000002,
+    "forward": 1.0,
+    "bigram": 1.0,
+    "coh bigram": 1.0,
+    "coh trigram": 1.0,
+    "multilag": 1.0
+   }
+  }
+ },
+ "rho_sweep": {
+  "disorder $\\sigma_\\omega=0.3$": {
+   "0.05": {
+    "self": 0.5149999999999999,
+    "forward": 0.615,
+    "bigram": 0.595,
+    "coh bigram": 0.56,
+    "coh trigram": 0.6,
+    "multilag": 0.63
+   },
+   "0.1": {
+    "self": 0.37,
+    "forward": 0.95,
+    "bigram": 0.78,
+    "coh bigram": 0.875,
+    "coh trigram": 0.73,
+    "multilag": 0.785
+   },
+   "0.15": {
+    "self": 0.215,
+    "forward": 0.9800000000000001,
+    "bigram": 0.75,
+    "coh bigram": 0.82,
+    "coh trigram": 0.5950000000000001,
+    "multilag": 0.85
+   },
+   "0.2": {
+    "self": 0.10500000000000002,
+    "forward": 0.9550000000000001,
+    "bigram": 0.6399999999999999,
+    "coh bigram": 0.8699999999999999,
+    "coh trigram": 0.5,
+    "multilag": 0.915
+   },
+   "0.25": {
+    "self": 0.10000000000000002,
+    "forward": 0.78,
+    "bigram": 0.38,
+    "coh bigram": 0.45499999999999996,
+    "coh trigram": 0.315,
+    "multilag": 0.8399999999999999
+   },
+   "0.3": {
+    "self": 0.10000000000000002,
+    "forward": 0.3,
+    "bigram": 0.23000000000000004,
+    "coh bigram": 0.26,
+    "coh trigram": 0.22999999999999998,
+    "multilag": 0.72
+   },
+   "0.35": {
+    "self": 0.10000000000000002,
+    "forward": 0.21000000000000005,
+    "bigram": 0.20000000000000004,
+    "coh bigram": 0.20000000000000004,
+    "coh trigram": 0.20000000000000004,
+    "multilag": 0.49000000000000005
+   }
+  },
+  "constant $\\omega=0.05$": {
+   "0.05": {
+    "self": 0.465,
+    "forward": 0.7050000000000001,
+    "bigram": 0.7000000000000001,
+    "coh bigram": 0.6500000000000001,
+    "coh trigram": 0.7100000000000001,
+    "multilag": 0.7250000000000001
+   },
+   "0.1": {
+    "self": 0.21000000000000002,
+    "forward": 0.97,
+    "bigram": 0.9,
+    "coh bigram": 0.9199999999999999,
+    "coh trigram": 0.7899999999999999,
+    "multilag": 0.8099999999999999
+   },
+   "0.15": {
+    "self": 0.10000000000000002,
+    "forward": 0.9800000000000001,
+    "bigram": 0.975,
+    "coh bigram": 0.9,
+    "coh trigram": 0.795,
+    "multilag": 0.9199999999999999
+   },
+   "0.2": {
+    "self": 0.10000000000000002,
+    "forward": 1.0,
+    "bigram": 0.86,
+    "coh bigram": 0.945,
+    "coh trigram": 0.755,
+    "multilag": 0.875
+   },
+   "0.25": {
+    "self": 0.10000000000000002,
+    "forward": 1.0,
+    "bigram": 0.945,
+    "coh bigram": 0.99,
+    "coh trigram": 0.615,
+    "multilag": 0.8149999999999998
+   },
+   "0.3": {
+    "self": 0.10000000000000002,
+    "forward": 1.0,
+    "bigram": 0.7649999999999999,
+    "coh bigram": 0.95,
+    "coh trigram": 0.5150000000000001,
+    "multilag": 0.75
+   },
+   "0.35": {
+    "self": 0.10000000000000002,
+    "forward": 1.0,
+    "bigram": 0.6399999999999999,
+    "coh bigram": 0.9800000000000001,
+    "coh trigram": 0.49499999999999994,
+    "multilag": 0.7650000000000001
+   }
+  }
+ },
+ "appendix": {
+  "random": {
+   "self": 0.10000000000000002,
+   "forward": 0.10500000000000002,
+   "bigram": 0.10500000000000002,
+   "coh bigram": 0.10500000000000002,
+   "coh trigram": 0.10000000000000002,
+   "multilag": 0.17000000000000004
+  },
+  "boundary": {
+   "self": {
+    "self": 0.10500000000000002,
+    "forward": 0.9550000000000001,
+    "bigram": 0.6399999999999999,
+    "coh bigram": 0.8699999999999999,
+    "coh trigram": 0.5,
+    "multilag": 0.915
+   },
+   "cycle": {
+    "self": 0.10500000000000002,
+    "forward": 0.96,
+    "bigram": 0.19,
+    "coh bigram": 0.14500000000000002,
+    "coh trigram": 0.10000000000000002,
+    "multilag": 0.58
+   }
+  }
+ },
+ "benchmark_N200": {
+  "2-1-2|raw": {
+   "self": {
+    "correct": 0.0,
+    "crossed": 0.0,
+    "incomplete": 1.0,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": NaN
+   },
+   "forward": {
+    "correct": 0.525,
+    "crossed": 0.475,
+    "incomplete": 0.0,
+    "branch": 0.55,
+    "branch_se": 0.07866066361276136,
+    "overlap": 0.8615279060813379
+   },
+   "skip-two": {
+    "correct": 0.0,
+    "crossed": 0.125,
+    "incomplete": 0.875,
+    "branch": 0.85,
+    "branch_se": 0.05645794895318108,
+    "overlap": NaN
+   },
+   "self+forward": {
+    "correct": 0.15,
+    "crossed": 0.175,
+    "incomplete": 0.675,
+    "branch": 0.55,
+    "branch_se": 0.07866066361276136,
+    "overlap": 0.8889031966210297
+   },
+   "forward+skip2": {
+    "correct": 0.65,
+    "crossed": 0.25,
+    "incomplete": 0.1,
+    "branch": 0.75,
+    "branch_se": 0.06846531968814576,
+    "overlap": 0.8647197994824855
+   },
+   "bigram": {
+    "correct": 0.625,
+    "crossed": 0.05,
+    "incomplete": 0.325,
+    "branch": 1.0,
+    "branch_se": 0.0,
+    "overlap": 0.7744177101128643
+   },
+   "multilag": {
+    "correct": 0.675,
+    "crossed": 0.2,
+    "incomplete": 0.125,
+    "branch": 0.825,
+    "branch_se": 0.06007807420348958,
+    "overlap": 0.8911387146576494
+   },
+   "coh bigram": {
+    "correct": 0.7,
+    "crossed": 0.175,
+    "incomplete": 0.125,
+    "branch": 0.925,
+    "branch_se": 0.041645828122394195,
+    "overlap": 0.8007157895168697
+   },
+   "coh trigram": {
+    "correct": 0.5,
+    "crossed": 0.025,
+    "incomplete": 0.475,
+    "branch": 1.0,
+    "branch_se": 0.0,
+    "overlap": 0.7576666437687448
+   }
+  },
+  "2-1-2|gain": {
+   "self": {
+    "correct": 0.0,
+    "crossed": 0.0,
+    "incomplete": 1.0,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": NaN
+   },
+   "forward": {
+    "correct": 0.525,
+    "crossed": 0.475,
+    "incomplete": 0.0,
+    "branch": 0.55,
+    "branch_se": 0.07866066361276136,
+    "overlap": 0.8615279060813379
+   },
+   "skip-two": {
+    "correct": 0.0,
+    "crossed": 0.125,
+    "incomplete": 0.875,
+    "branch": 0.85,
+    "branch_se": 0.05645794895318108,
+    "overlap": NaN
+   },
+   "self+forward": {
+    "correct": 0.25,
+    "crossed": 0.275,
+    "incomplete": 0.475,
+    "branch": 0.45,
+    "branch_se": 0.07866066361276136,
+    "overlap": 0.8694547207982835
+   },
+   "forward+skip2": {
+    "correct": 0.575,
+    "crossed": 0.275,
+    "incomplete": 0.15,
+    "branch": 0.8,
+    "branch_se": 0.06324555320336758,
+    "overlap": 0.8383585007672462
+   },
+   "bigram": {
+    "correct": 0.75,
+    "crossed": 0.0,
+    "incomplete": 0.25,
+    "branch": 1.0,
+    "branch_se": 0.0,
+    "overlap": 0.8812400817086974
+   },
+   "multilag": {
+    "correct": 0.65,
+    "crossed": 0.1,
+    "incomplete": 0.25,
+    "branch": 0.9,
+    "branch_se": 0.04743416490252569,
+    "overlap": 0.8797595642398696
+   },
+   "coh bigram": {
+    "correct": 0.75,
+    "crossed": 0.15,
+    "incomplete": 0.1,
+    "branch": 0.875,
+    "branch_se": 0.05229125165837972,
+    "overlap": 0.8757813503754633
+   },
+   "coh trigram": {
+    "correct": 0.725,
+    "crossed": 0.075,
+    "incomplete": 0.2,
+    "branch": 0.925,
+    "branch_se": 0.041645828122394195,
+    "overlap": 0.8838677668217526
+   }
+  },
+  "2-2-2|raw": {
+   "self": {
+    "correct": 0.0,
+    "crossed": 0.0,
+    "incomplete": 1.0,
+    "branch": 0.6,
+    "branch_se": 0.07745966692414834,
+    "overlap": NaN
+   },
+   "forward": {
+    "correct": 0.525,
+    "crossed": 0.425,
+    "incomplete": 0.05,
+    "branch": 0.55,
+    "branch_se": 0.07866066361276136,
+    "overlap": 0.8578807660303318
+   },
+   "skip-two": {
+    "correct": 0.0,
+    "crossed": 0.5,
+    "incomplete": 0.5,
+    "branch": 0.45,
+    "branch_se": 0.07866066361276136,
+    "overlap": NaN
+   },
+   "self+forward": {
+    "correct": 0.225,
+    "crossed": 0.225,
+    "incomplete": 0.55,
+    "branch": 0.525,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.8922868306639118
+   },
+   "forward+skip2": {
+    "correct": 0.5,
+    "crossed": 0.45,
+    "incomplete": 0.05,
+    "branch": 0.575,
+    "branch_se": 0.07816249100431741,
+    "overlap": 0.8654157838429611
+   },
+   "bigram": {
+    "correct": 0.375,
+    "crossed": 0.475,
+    "incomplete": 0.15,
+    "branch": 0.525,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.7561683300344781
+   },
+   "multilag": {
+    "correct": 0.65,
+    "crossed": 0.325,
+    "incomplete": 0.025,
+    "branch": 0.7,
+    "branch_se": 0.07245688373094719,
+    "overlap": 0.8909337226721559
+   },
+   "coh bigram": {
+    "correct": 0.525,
+    "crossed": 0.425,
+    "incomplete": 0.05,
+    "branch": 0.55,
+    "branch_se": 0.07866066361276136,
+    "overlap": 0.7844981191673719
+   },
+   "coh trigram": {
+    "correct": 0.35,
+    "crossed": 0.325,
+    "incomplete": 0.325,
+    "branch": 0.8,
+    "branch_se": 0.06324555320336758,
+    "overlap": 0.7388282686696989
+   }
+  },
+  "2-2-2|gain": {
+   "self": {
+    "correct": 0.0,
+    "crossed": 0.0,
+    "incomplete": 1.0,
+    "branch": 0.6,
+    "branch_se": 0.07745966692414834,
+    "overlap": NaN
+   },
+   "forward": {
+    "correct": 0.525,
+    "crossed": 0.425,
+    "incomplete": 0.05,
+    "branch": 0.55,
+    "branch_se": 0.07866066361276136,
+    "overlap": 0.8578807660303318
+   },
+   "skip-two": {
+    "correct": 0.0,
+    "crossed": 0.5,
+    "incomplete": 0.5,
+    "branch": 0.45,
+    "branch_se": 0.07866066361276136,
+    "overlap": NaN
+   },
+   "self+forward": {
+    "correct": 0.275,
+    "crossed": 0.325,
+    "incomplete": 0.4,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": 0.8742209485309068
+   },
+   "forward+skip2": {
+    "correct": 0.475,
+    "crossed": 0.45,
+    "incomplete": 0.075,
+    "branch": 0.525,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.8385511249397635
+   },
+   "bigram": {
+    "correct": 0.45,
+    "crossed": 0.425,
+    "incomplete": 0.125,
+    "branch": 0.575,
+    "branch_se": 0.07816249100431741,
+    "overlap": 0.8775764302107285
+   },
+   "multilag": {
+    "correct": 0.575,
+    "crossed": 0.25,
+    "incomplete": 0.175,
+    "branch": 0.75,
+    "branch_se": 0.06846531968814576,
+    "overlap": 0.8801605895760415
+   },
+   "coh bigram": {
+    "correct": 0.575,
+    "crossed": 0.4,
+    "incomplete": 0.025,
+    "branch": 0.6,
+    "branch_se": 0.07745966692414834,
+    "overlap": 0.8733085808495248
+   },
+   "coh trigram": {
+    "correct": 0.6,
+    "crossed": 0.25,
+    "incomplete": 0.15,
+    "branch": 0.75,
+    "branch_se": 0.06846531968814576,
+    "overlap": 0.8850441449530541
+   }
+  },
+  "2-3-2|raw": {
+   "self": {
+    "correct": 0.0,
+    "crossed": 0.0,
+    "incomplete": 1.0,
+    "branch": 0.425,
+    "branch_se": 0.07816249100431741,
+    "overlap": NaN
+   },
+   "forward": {
+    "correct": 0.475,
+    "crossed": 0.45,
+    "incomplete": 0.075,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": 0.8656916040747081
+   },
+   "skip-two": {
+    "correct": 0.0,
+    "crossed": 0.45,
+    "incomplete": 0.55,
+    "branch": 0.575,
+    "branch_se": 0.07816249100431741,
+    "overlap": NaN
+   },
+   "self+forward": {
+    "correct": 0.1,
+    "crossed": 0.1,
+    "incomplete": 0.8,
+    "branch": 0.525,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.8925769360340772
+   },
+   "forward+skip2": {
+    "correct": 0.425,
+    "crossed": 0.5,
+    "incomplete": 0.075,
+    "branch": 0.475,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.8665063137835739
+   },
+   "bigram": {
+    "correct": 0.25,
+    "crossed": 0.5,
+    "incomplete": 0.25,
+    "branch": 0.475,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.7589981259926827
+   },
+   "multilag": {
+    "correct": 0.35,
+    "crossed": 0.475,
+    "incomplete": 0.175,
+    "branch": 0.525,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.8950294804682624
+   },
+   "coh bigram": {
+    "correct": 0.4,
+    "crossed": 0.475,
+    "incomplete": 0.125,
+    "branch": 0.55,
+    "branch_se": 0.07866066361276136,
+    "overlap": 0.7949176045420816
+   },
+   "coh trigram": {
+    "correct": 0.2,
+    "crossed": 0.4,
+    "incomplete": 0.4,
+    "branch": 0.525,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.738169577620956
+   }
+  },
+  "2-3-2|gain": {
+   "self": {
+    "correct": 0.0,
+    "crossed": 0.0,
+    "incomplete": 1.0,
+    "branch": 0.425,
+    "branch_se": 0.07816249100431741,
+    "overlap": NaN
+   },
+   "forward": {
+    "correct": 0.475,
+    "crossed": 0.45,
+    "incomplete": 0.075,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": 0.8656916040747081
+   },
+   "skip-two": {
+    "correct": 0.0,
+    "crossed": 0.45,
+    "incomplete": 0.55,
+    "branch": 0.575,
+    "branch_se": 0.07816249100431741,
+    "overlap": NaN
+   },
+   "self+forward": {
+    "correct": 0.175,
+    "crossed": 0.175,
+    "incomplete": 0.65,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": 0.8670741119609288
+   },
+   "forward+skip2": {
+    "correct": 0.35,
+    "crossed": 0.525,
+    "incomplete": 0.125,
+    "branch": 0.525,
+    "branch_se": 0.07895805848676878,
+    "overlap": 0.8440586790715924
+   },
+   "bigram": {
+    "correct": 0.35,
+    "crossed": 0.5,
+    "incomplete": 0.15,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": 0.882096655477181
+   },
+   "multilag": {
+    "correct": 0.275,
+    "crossed": 0.475,
+    "incomplete": 0.25,
+    "branch": 0.55,
+    "branch_se": 0.07866066361276136,
+    "overlap": 0.880541199680989
+   },
+   "coh bigram": {
+    "correct": 0.45,
+    "crossed": 0.475,
+    "incomplete": 0.075,
+    "branch": 0.6,
+    "branch_se": 0.07745966692414834,
+    "overlap": 0.8752968908976576
+   },
+   "coh trigram": {
+    "correct": 0.325,
+    "crossed": 0.5,
+    "incomplete": 0.175,
+    "branch": 0.5,
+    "branch_se": 0.07905694150420949,
+    "overlap": 0.8870563590545177
+   }
+  }
+ },
+ "seed_sweep_N200": {
+  "2-1-2": {
+   "self": {
+    "correct": 0.0,
+    "branch": 0.49,
+    "branch_se": 0.03534826728426727,
+    "overlap": NaN,
+    "overlap_sd": NaN
+   },
+   "forward": {
+    "correct": 0.315,
+    "branch": 0.51,
+    "branch_se": 0.03534826728426727,
+    "overlap": 0.8563403971868225,
+    "overlap_sd": 0.047625031092031166
+   },
+   "skip-two": {
+    "correct": 0.025,
+    "branch": 0.85,
+    "branch_se": 0.025248762345905194,
+    "overlap": 0.8803567403089735,
+    "overlap_sd": 0.01814281514420443
+   },
+   "self+forward": {
+    "correct": 0.185,
+    "branch": 0.49,
+    "branch_se": 0.03534826728426727,
+    "overlap": 0.8599240227281829,
+    "overlap_sd": 0.022402269882203008
+   },
+   "forward+skip2": {
+    "correct": 0.5,
+    "branch": 0.69,
+    "branch_se": 0.032703210851535665,
+    "overlap": 0.855247715860783,
+    "overlap_sd": 0.03625416740441141
+   },
+   "bigram": {
+    "correct": 0.415,
+    "branch": 0.91,
+    "branch_se": 0.02023610634484806,
+    "overlap": 0.7871453766604604,
+    "overlap_sd": 0.05573367640296382
+   },
+   "multilag": {
+    "correct": 0.53,
+    "branch": 0.835,
+    "branch_se": 0.02624642832844119,
+    "overlap": 0.8791839072390525,
+    "overlap_sd": 0.025517903966919105
+   },
+   "coh bigram": {
+    "correct": 0.43,
+    "branch": 0.79,
+    "branch_se": 0.028801041647829335,
+    "overlap": 0.8073957538998937,
+    "overlap_sd": 0.06326422548238315
+   },
+   "coh trigram": {
+    "correct": 0.285,
+    "branch": 0.915,
+    "branch_se": 0.019719913792915014,
+    "overlap": 0.7744446123229037,
+    "overlap_sd": 0.04698341951110884
+   }
+  },
+  "2-2-2": {
+   "self": {
+    "correct": 0.0,
+    "branch": 0.51,
+    "branch_se": 0.03534826728426727,
+    "overlap": NaN,
+    "overlap_sd": NaN
+   },
+   "forward": {
+    "correct": 0.28,
+    "branch": 0.48,
+    "branch_se": 0.03532704346531139,
+    "overlap": 0.8387303904676104,
+    "overlap_sd": 0.056817958613643124
+   },
+   "skip-two": {
+    "correct": 0.0,
+    "branch": 0.465,
+    "branch_se": 0.03526861210765175,
+    "overlap": NaN,
+    "overlap_sd": NaN
+   },
+   "self+forward": {
+    "correct": 0.225,
+    "branch": 0.51,
+    "branch_se": 0.03534826728426727,
+    "overlap": 0.8599231921338132,
+    "overlap_sd": 0.023599830827006278
+   },
+   "forward+skip2": {
+    "correct": 0.285,
+    "branch": 0.505,
+    "branch_se": 0.03535357124817803,
+    "overlap": 0.8547249523373243,
+    "overlap_sd": 0.03381000470409457
+   },
+   "bigram": {
+    "correct": 0.18,
+    "branch": 0.51,
+    "branch_se": 0.03534826728426727,
+    "overlap": 0.7959242528592214,
+    "overlap_sd": 0.05866930533248491
+   },
+   "multilag": {
+    "correct": 0.345,
+    "branch": 0.605,
+    "branch_se": 0.03456696399743547,
+    "overlap": 0.878761388459669,
+    "overlap_sd": 0.02882687320182957
+   },
+   "coh bigram": {
+    "correct": 0.21,
+    "branch": 0.495,
+    "branch_se": 0.03535357124817803,
+    "overlap": 0.8197136426390015,
+    "overlap_sd": 0.06170838562818218
+   },
+   "coh trigram": {
+    "correct": 0.14,
+    "branch": 0.755,
+    "branch_se": 0.030411757594719844,
+    "overlap": 0.7745608608847728,
+    "overlap_sd": 0.0484713781607015
+   }
+  },
+  "2-3-2": {
+   "self": {
+    "correct": 0.0,
+    "branch": 0.485,
+    "branch_se": 0.03533942557541082,
+    "overlap": NaN,
+    "overlap_sd": NaN
+   },
+   "forward": {
+    "correct": 0.265,
+    "branch": 0.49,
+    "branch_se": 0.03534826728426727,
+    "overlap": 0.8457223381285511,
+    "overlap_sd": 0.050482942118701454
+   },
+   "skip-two": {
+    "correct": 0.01,
+    "branch": 0.535,
+    "branch_se": 0.03526861210765175,
+    "overlap": 0.8579992954309659,
+    "overlap_sd": 0.017809156610771537
+   },
+   "self+forward": {
+    "correct": 0.195,
+    "branch": 0.5,
+    "branch_se": 0.035355339059327376,
+    "overlap": 0.8574739686459463,
+    "overlap_sd": 0.023858030597492714
+   },
+   "forward+skip2": {
+    "correct": 0.295,
+    "branch": 0.465,
+    "branch_se": 0.03526861210765175,
+    "overlap": 0.8527637218270538,
+    "overlap_sd": 0.035674076056196956
+   },
+   "bigram": {
+    "correct": 0.15,
+    "branch": 0.51,
+    "branch_se": 0.03534826728426727,
+    "overlap": 0.7992240354934292,
+    "overlap_sd": 0.05669852248676522
+   },
+   "multilag": {
+    "correct": 0.3,
+    "branch": 0.5,
+    "branch_se": 0.035355339059327376,
+    "overlap": 0.8797176904092386,
+    "overlap_sd": 0.026451773195104732
+   },
+   "coh bigram": {
+    "correct": 0.22,
+    "branch": 0.5,
+    "branch_se": 0.035355339059327376,
+    "overlap": 0.8145552816388953,
+    "overlap_sd": 0.06274161471219364
+   },
+   "coh trigram": {
+    "correct": 0.105,
+    "branch": 0.515,
+    "branch_se": 0.03533942557541082,
+    "overlap": 0.7914309918810267,
+    "overlap_sd": 0.047696730991595944
+   }
+  }
+ }
+}

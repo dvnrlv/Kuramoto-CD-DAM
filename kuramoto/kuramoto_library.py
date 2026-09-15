@@ -460,7 +460,7 @@ def generate_multi_sequence(
 # for STATIONARY_PATIENCE consecutive steps, the trajectory has settled and further
 # integration is wasted -- stop early rather than running out the full schedule.
 STATIONARY_EPS = 1e-6
-STATIONARY_PATIENCE = 200
+STATIONARY_PATIENCE = 10
 
 
 @njit(cache=True, fastmath=True)

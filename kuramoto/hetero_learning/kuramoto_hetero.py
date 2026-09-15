@@ -297,12 +297,20 @@ def _context_drive(cos_theta, xi, rows, weights, m, V):
 
 
 @njit(cache=True, fastmath=True)
-def _simulate_context(theta_init, omega, xi, rows, weights, dt, num_steps, phase_noise, seed):
+def _simulate_context(theta_init, omega, xi, rows, weights, dt, num_steps, phase_noise, seed,
+                      stationary_eps=STATIONARY_EPS, stationary_patience=STATIONARY_PATIENCE):
     """Euler/Euler-Maruyama loop and Stationary Break Check of `_simulate_transition`,
     driven by `_context_drive`. phase_noise = 0 is the ODE, > 0 the SDE.
 
     Stationarity is judged on the deterministic drift alone in both cases: once that has
     settled, further integration is just wandering near a fixed point.
+
+    `stationary_eps` / `stationary_patience` are PARAMETERS, not module globals read from
+    inside the kernel, matching every kernel in kuramoto_library. numba bakes a global into
+    the compiled code at compile time and `cache=True` persists that, so reading them as
+    globals made this function silently disagree with the library kernels after any edit to
+    the constants -- and `%autoreload` cannot fix it, because the compiled artefact is keyed
+    on this file, not on the one the constants live in.
     """
     np.random.seed(seed)
     N = theta_init.shape[0]
@@ -339,9 +347,9 @@ def _simulate_context(theta_init, omega, xi, rows, weights, dt, num_steps, phase
 
         history[step + 1] = theta.copy()
 
-        if max_abs_dtheta < STATIONARY_EPS:
+        if max_abs_dtheta < stationary_eps:
             stationary_count += 1
-            if stationary_count >= STATIONARY_PATIENCE:
+            if stationary_count >= stationary_patience:
                 actual_steps = step + 1
                 break
         else:
