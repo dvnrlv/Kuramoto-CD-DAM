@@ -1,5 +1,38 @@
 %%% NOTE: I AM FIRST COMPILING MY TEX FILE IN VS Code; WILL TRANSFER CONTENT
 
+
+% **Presentation Structure:**
+
+% 1) Introduction: Problem Statement and Motivation
+% 	- Why the problem is relevant; particular aspect we focus on (crossover disambiguation in sequential memory);
+% 	- Goal
+% 	- Quickly introduce the model we hope to implement; introduce idea of energetic approach
+% 2) Lit Review
+% 	* Important papers in the fields (including Krotov on DAM)
+% 	* Clear Gap: no learning rules for disambiguation of crossover
+% 3) Introduction of Model
+% 	* Motivation for Kuramoto in a Hopfield Network (mention what we are hoping to observe: smoothness when retrieving, and mention importance to physical oscillator-based simulators)
+% 	* Introduce basic learning rule (derived for Kuramoto from Krotov DAM) and algorithm for sequence retrieval; display graph for single sequence retrieval
+% 	* Demonstrate the inability of the basic rule to resolve branching / crossover
+% 	* Using argument on the innate symmetry of the energy landscape, introduce heterogeneous learning rules + motivation/reasoning
+% 4) Experiment
+% 	* Set up benchmarks
+% 	* Table display of learning rules
+% 	* Define experiment conditions; important global parameters
+% 	* Experimental results, including superposition of learning rules
+% 	* Display robustness, sweeping across different corruption ratios and N
+% 	* Discussion: based on this talk about which learning rules perform better + limitations
+% 5) Analytical Part (Jona)
+% 	* Tensor notation: symmetric and asymmetric components
+% 	* Scalability?
+% 6) Conclusion + Applications
+% 	* Quick notes on implementation into physical simulator and problems that this can solve (include those in Neurobiology?)
+
+
+% UNSURE: in which order, benchmark first and then new learning rule or benchmark in section on experiment 
+
+%%% NOTE: I AM FIRST COMPILING MY TEX FILE IN VS Code; WILL TRANSFER CONTENT
+
 % =====================================================================
 %  Crossover disambiguation in Kuramoto-coupled dense associative
 %  sequential memory.
@@ -870,3 +903,6 @@
 \end{frame}
 
 \end{document}
+
+
+

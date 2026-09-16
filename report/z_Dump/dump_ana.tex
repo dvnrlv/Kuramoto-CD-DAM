@@ -1,0 +1,1277 @@
+\section{Analytical Investigation of Crossing Sequence Memory}
+
+\subsection{Preliminaries}
+
+Let
+\begin{equation}
+z_i=e^{\mathrm{i}\theta_i},
+\qquad
+\xi_i^\mu=e^{\mathrm{i}\phi_i^\mu},
+\qquad
+i=1,\ldots,N,
+\end{equation}
+and define the normalized complex overlap
+\begin{equation}
+m_\mu(z)
+=
+\frac{1}{N}
+\sum_{j=1}^N
+\overline{\xi_j^\mu}z_j.
+\end{equation}
+The autonomous Kuramoto dynamics are
+\begin{equation}
+\dot{\theta}_i
+=
+g,\operatorname{Im}
+\left[
+h_i(z)\overline{z_i}
+\right].
+\end{equation}
+Equivalently, since $\dot z_i=\mathrm{i}z_i\dot\theta_i$,
+\begin{equation}
+\dot z_i
+=
+\frac{g}{2}
+\left[
+h_i(z)
+-
+z_i^2\overline{h_i(z)}
+\right].
+\label{eq:z-dynamics}
+\end{equation}
+
+We consider fields that may be written in the form
+\begin{equation}
+h_i(z)
+=
+\sum_\nu
+\xi_i^\nu A_\nu(m,\overline m),
+\label{eq:general-memory-field}
+\end{equation}
+where each $A_\nu$ is a static polynomial of bidegree $(2,1)$ in the overlaps.
+
+For example, a transition $\mu\rightarrow\mu+1$ has coefficients
+\begin{align}
+A_{\mu+1}^{\mathrm{M1}}
+&=
+m_\mu |m_\mu|^2,
+\
+A_{\mu+1}^{\mathrm{B}}
+&=
+m_\mu |m_{\mu-1}|^2,
+\
+A_{\mu+1}^{\mathrm{CB}}
+&=
+m_\mu^2\overline{m_{\mu-1}},
+\
+A_{\mu+1}^{\mathrm{CT}}
+&=
+m_\mu m_{\mu-2}\overline{m_{\mu-1}}.
+\end{align}
+
+Throughout the analysis it is useful to distinguish two notions of context.
+
+\begin{definition}[Explicit dynamical context]
+A model has explicit dynamical context if its state contains a variable in
+addition to $z$, for example a delayed trace $q$, such that two trajectories
+with the same instantaneous oscillator state $z$ may nevertheless have
+different future evolution because their additional states differ.
+\end{definition}
+
+\begin{definition}[Residual geometric context]
+A static rule has residual geometric context if branch information is encoded
+only through small differences in the instantaneous state $z$, and hence in
+$m(z)$, as the trajectory approaches a nominally shared pattern.
+\end{definition}
+
+The bigram, coherent-bigram, and coherent-trigram rules considered here belong
+to the second category.  They do not violate the autonomous current-state
+obstruction derived below.
+
+\subsection{No-go result for exact crossings}
+
+Consider two stored sequences
+\begin{equation}
+\cdots
+\rightarrow \xi^{p_1}
+\rightarrow \xi^\star
+\rightarrow \xi^{s_1}
+\rightarrow\cdots
+\end{equation}
+and
+\begin{equation}
+\cdots
+\rightarrow \xi^{p_2}
+\rightarrow \xi^\star
+\rightarrow \xi^{s_2}
+\rightarrow\cdots,
+\end{equation}
+with $s_1\neq s_2$, but with the central state $\xi^\star$ shared exactly.
+
+\begin{proposition}[Exact-crossing obstruction]
+\label{prop:no-go}
+Let the network be deterministic and autonomous, with
+\begin{equation}
+h(z)=H(m(z),\overline{m(z)})
+\end{equation}
+for a single-valued static function $H$.  If two trajectories arrive at exactly
+the same oscillator state
+\begin{equation}
+z=\xi^\star,
+\end{equation}
+then they have identical instantaneous vector fields at the crossing,
+independent of the branch from which they arrived.
+Consequently, exact deterministic branch selection cannot depend on the
+incoming branch once the complete dynamical state has collapsed to
+$\xi^\star$.
+\end{proposition}
+
+\paragraph{Proof.}
+At $z=\xi^\star$, every overlap is uniquely determined:
+\begin{equation}
+m_\mu^\star
+=
+m_\mu(\xi^\star)
+=
+\frac{1}{N}
+\sum_j
+\overline{\xi_j^\mu}\xi_j^\star.
+\end{equation}
+This vector is a function only of $\xi^\star$ and the stored patterns.  It does
+not depend on the trajectory by which $\xi^\star$ was reached.  Therefore
+\begin{equation}
+h(\xi^\star)
+=
+H(m^\star,\overline{m^\star})
+\end{equation}
+is identical for all incoming branches.  The deterministic vector field
+\begin{equation}
+\dot{\theta}_i
+=
+g\operatorname{Im}
+\left[
+h_i(\xi^\star)\overline{\xi_i^\star}
+\right]
+\end{equation}
+is consequently identical as well.  Hence branch-dependent continuation from
+the exactly identical complete state is impossible. \hfill$\square$
+
+\paragraph{Corollary.}
+The obstruction applies not only to Markov-1 rules, but to every static
+polynomial rule constructed from the instantaneous overlaps, including the
+bigram, coherent-bigram, coherent-trigram, multilag, and ridge-fitted rules.
+
+Thus, when these rules empirically resolve crossings, the relevant mechanism is
+not true hidden memory.  Rather, the trajectory fails to collapse exactly onto
+$\xi^\star$ before leaving its neighborhood, and a small branch-dependent
+component survives in the overlap vector.
+
+Exact deterministic disambiguation at an identical state would require at
+least one of the following:
+\begin{equation}
+\text{additional dynamical state},\qquad
+\text{external branch bias},\qquad
+\text{explicit delay},\qquad
+\text{stochastic symmetry breaking},
+\end{equation}
+or a representation in which the apparently shared state is lifted into
+distinct context-dependent states.
+
+\subsection{Local overlap expansion near a crossing}
+
+We next analyze the empirically relevant case in which the trajectory passes
+near, rather than exactly through, the shared pattern.
+
+Because $z_i$ must remain on the unit circle, the schematic expression
+\begin{equation}
+z
+\approx
+\xi^\star+\varepsilon\xi^{p}
+\end{equation}
+should be interpreted as an overlap-coordinate expansion rather than a literal
+linear superposition of phase vectors.
+
+Suppose the trajectory approaching $\xi^\star$ from branch $b$ has overlaps
+\begin{align}
+m_\star
+&=
+1-O(\varepsilon^2)-O_p(N^{-1/2}),
+\label{eq:m-star-local}
+\
+m_{p_b}
+&=
+q_\rho+\varepsilon r_b+\eta_b,
+\label{eq:m-prev-local}
+\
+m_{p_c}
+&=
+q_\rho+\varepsilon r_{bc}+\eta_c,
+\qquad c\neq b.
+\label{eq:m-wrong-prev-local}
+\end{align}
+Here
+\begin{equation}
+q_\rho
+=
+\frac{1}{N}
+\sum_i
+\overline{\xi_i^{p_b}}\xi_i^\star
+\end{equation}
+is the typical predecessor–crossing overlap induced by the corruption
+procedure.
+
+For the benchmark distance
+\begin{equation}
+d(\xi,\zeta)
+=
+1-
+\left|
+\frac{1}{N}
+\sum_i
+\overline{\xi_i}\zeta_i
+\right|,
+\end{equation}
+one expects schematically
+\begin{equation}
+|q_\rho|
+\simeq
+1-\rho,
+\end{equation}
+up to details of the corruption distribution.
+
+The variable $r_b$ measures alignment between the surviving perturbation and
+the incoming branch direction.  For the correct branch we assume
+\begin{equation}
+r_b=O(\sigma_\rho),
+\end{equation}
+whereas independent branch directions give
+\begin{equation}
+r_{bc}
+=
+O_p\left(\frac{\sigma_\rho}{\sqrt N}\right),
+\qquad c\neq b.
+\end{equation}
+A natural scale is
+\begin{equation}
+\sigma_\rho^2
+\sim
+1-|q_\rho|^2,
+\end{equation}
+which measures the innovation orthogonal to the shared pattern.
+
+The finite-size overlap fluctuations satisfy
+\begin{equation}
+\eta_b,\eta_c
+=
+O_p(N^{-1/2})
+\end{equation}
+under a random-phase approximation.
+
+For fully independent random phase patterns, $q_\rho=0$, giving the simpler
+idealization
+\begin{equation}
+m_{p_b}
+=
+\varepsilon r_b+O_p(N^{-1/2}),
+\qquad
+m_{p_c}
+=
+O_p(N^{-1/2}).
+\end{equation}
+
+The corruption-path benchmarks are more structured than this independent
+pattern limit, because all immediate predecessors of a crossing may have a
+nonzero common overlap $q_\rho$ with the crossing pattern.
+
+\subsection{Expansion of the branch-selecting fields}
+
+Suppose there are $B$ candidate transitions
+\begin{equation}
+p_b\rightarrow \star\rightarrow s_b,
+\qquad
+b=1,\ldots,B.
+\end{equation}
+
+At a state near $\xi^\star$, the part of each rule that points toward successor
+$s_b$ can be studied through its coefficient.
+
+\subsubsection{Markov-1 rule}
+
+For all branches,
+\begin{equation}
+A_{s_b}^{\mathrm{M1}}
+=
+m_\star|m_\star|^2.
+\end{equation}
+Hence
+\begin{equation}
+A_{s_1}^{\mathrm{M1}}
+=
+\cdots
+=
+A_{s_B}^{\mathrm{M1}}
+\end{equation}
+whenever the shared pattern is indexed identically as the current state.
+
+There is therefore no branch-selective term even slightly away from the
+crossing unless branch information also enters through some additional
+feature of the rule.
+
+This is the local manifestation of Proposition~\ref{prop:no-go}.
+
+\subsubsection{Magnitude-gated bigram rule}
+
+For branch $b$,
+\begin{equation}
+A_{s_b}^{\mathrm{B}}
+=
+m_\star |m_{p_b}|^2.
+\end{equation}
+Using $m_\star=1+O(\varepsilon^2)$,
+\begin{equation}
+A_{s_b}^{\mathrm{B}}
+=
+\left|
+q_\rho+\varepsilon r_b+\eta_b
+\right|^2
++
+O(\varepsilon^2|m_{p_b}|^2).
+\end{equation}
+Expanding,
+\begin{equation}
+A_{s_b}^{\mathrm{B}}
+=
+|q_\rho|^2
++
+2\varepsilon
+\operatorname{Re}
+\left(
+\overline{q_\rho}r_b
+\right)
++
+\varepsilon^2|r_b|^2
++
+O_p(N^{-1/2}).
+\label{eq:bigram-expansion}
+\end{equation}
+
+The common term $|q_\rho|^2$ does not select a branch.  The leading
+branch-specific contrast is therefore
+\begin{equation}
+S_{\mathrm{B}}
+\sim
+2\varepsilon
+\operatorname{Re}
+\left(
+\overline{q_\rho}r_b
+\right)
+\end{equation}
+when $q_\rho\neq0$.
+
+In the independent-pattern limit $q_\rho=0$, the linear term vanishes and
+\begin{equation}
+S_{\mathrm{B}}
+\sim
+\varepsilon^2|r_b|^2.
+\label{eq:bigram-independent-signal}
+\end{equation}
+
+Thus magnitude gating may produce a quadratic branch signal in the
+uncorrelated limit, but a linear differential signal when the predecessor and
+crossing state possess a substantial baseline correlation.
+
+\subsubsection{Coherent bigram rule}
+
+The successor coefficient is
+\begin{equation}
+A_{s_b}^{\mathrm{CB}}
+=
+m_\star^2\overline{m_{p_b}}.
+\end{equation}
+Hence
+\begin{equation}
+A_{s_b}^{\mathrm{CB}}
+=
+\overline{q_\rho}
++
+\varepsilon\overline{r_b}
++
+\overline{\eta_b}
++
+O(\varepsilon^2).
+\label{eq:coherent-bigram-expansion}
+\end{equation}
+
+The branch-independent baseline $\overline{q_\rho}$ again produces no
+disambiguating information.  The branch-dependent increment is linear:
+\begin{equation}
+S_{\mathrm{CB}}
+\sim
+\varepsilon |r_b|.
+\label{eq:coherent-bigram-signal}
+\end{equation}
+
+This is one reason the coherent rule may have a stronger local
+signal-to-crosstalk ratio than a magnitude-gated rule when the residual context
+is small.
+
+\subsubsection{Coherent trigram rule}
+
+For a transition $\mu\rightarrow\mu+1$,
+\begin{equation}
+A_{\mu+1}^{\mathrm{CT}}
+=
+m_\mu m_{\mu-2}\overline{m_{\mu-1}}.
+\end{equation}
+
+For a one-node crossing, the two lagged overlaps may both retain branch
+dependence.  Writing
+\begin{equation}
+m_{\mu-1}
+=
+q_1+\varepsilon r_1+\eta_1,
+\qquad
+m_{\mu-2}
+=
+q_2+\varepsilon r_2+\eta_2,
+\end{equation}
+one obtains
+\begin{align}
+A_{\mu+1}^{\mathrm{CT}}
+&=
+m_\mu
+\left(q_2+\varepsilon r_2+\eta_2\right)
+\left(
+\overline{q_1}
++
+\varepsilon\overline{r_1}
++
+\overline{\eta_1}
+\right)
+\
+&=
+m_\mu q_2\overline{q_1}
++
+\varepsilon m_\mu
+\left(
+r_2\overline{q_1}
++
+q_2\overline{r_1}
+\right)
++
+O(\varepsilon^2)
++
+O_p(N^{-1/2}).
+\end{align}
+
+The product therefore contains phase-sensitive information about the relative
+geometry of two recent patterns.  This becomes especially useful when one
+lagged pattern is shared and the other is still branch-specific.
+
+\subsection{Signal-to-crosstalk scaling}
+
+We now give heuristic mean-field estimates for the branch signal.
+
+These estimates are not rigorous because the overlaps become dynamically
+correlated during retrieval.  They are intended as a scaling theory against
+which simulations can be compared.
+
+Let
+\begin{equation}
+P
+\end{equation}
+denote the number of stored transitions and
+\begin{equation}
+B
+\end{equation}
+the number of candidate successors at the crossing.
+
+For unrelated random phase patterns,
+\begin{equation}
+\frac{1}{N}
+\sum_i
+\overline{\xi_i^\alpha}\xi_i^\beta
+=
+O_p(N^{-1/2}),
+\qquad
+\alpha\neq\beta.
+\end{equation}
+
+Accordingly, an inactive overlap has typical magnitude
+\begin{equation}
+|m_\alpha|
+\sim
+N^{-1/2}.
+\end{equation}
+
+\subsubsection{Bigram scaling}
+
+For the correct branch,
+\begin{equation}
+S_{\mathrm{B}}
+\sim
+\begin{cases}
+\varepsilon^2\sigma_\rho^2,
+& q_\rho\simeq0,
+\[4pt]
+\varepsilon |q_\rho|\sigma_\rho,
+& |q_\rho|>0.
+\end{cases}
+\end{equation}
+
+For an incorrect branch at the crossing in the independent-pattern limit,
+\begin{equation}
+|A_{s_c}^{\mathrm{B}}|
+\sim
+|m_\star||m_{p_c}|^2
+\sim
+N^{-1}.
+\end{equation}
+Combining $B-1$ approximately independent competitors gives the scale
+\begin{equation}
+C_{\mathrm{wrong}}^{\mathrm{B}}
+\sim
+\frac{\sqrt B}{N}.
+\end{equation}
+
+A generic inactive transition has
+\begin{equation}
+|m_\mu||m_{\mu-1}|^2
+\sim
+N^{-3/2},
+\end{equation}
+so $P$ incoherent transitions contribute approximately
+\begin{equation}
+C_{\mathrm{noise}}^{\mathrm{B}}
+\sim
+\frac{\sqrt P}{N^{3/2}}.
+\end{equation}
+
+A simple sufficient scaling condition is therefore
+\begin{equation}
+S_{\mathrm{B}}
+\gg
+c_1\frac{\sqrt B}{N}
++
+c_2\frac{\sqrt P}{N^{3/2}},
+\label{eq:bigram-condition}
+\end{equation}
+where $c_1,c_2=O(1)$ depend on the desired error probability and pattern
+statistics.
+
+In the uncorrelated case this gives roughly
+\begin{equation}
+\varepsilon
+\gg
+\frac{B^{1/4}}
+{\sqrt{N},\sigma_\rho}
+\end{equation}
+when branch competition dominates.
+
+\subsubsection{Coherent-bigram scaling}
+
+The coherent bigram has correct differential signal
+\begin{equation}
+S_{\mathrm{CB}}
+\sim
+\varepsilon\sigma_\rho.
+\end{equation}
+
+An incorrect candidate branch has
+\begin{equation}
+|A_{s_c}^{\mathrm{CB}}|
+\sim
+N^{-1/2},
+\end{equation}
+and hence
+\begin{equation}
+C_{\mathrm{wrong}}^{\mathrm{CB}}
+\sim
+\sqrt{\frac{B}{N}}.
+\end{equation}
+
+Inactive bulk terms satisfy
+\begin{equation}
+|m_\mu|^2|m_{\mu-1}|
+\sim
+N^{-3/2},
+\end{equation}
+giving
+\begin{equation}
+C_{\mathrm{noise}}^{\mathrm{CB}}
+\sim
+\frac{\sqrt P}{N^{3/2}}.
+\end{equation}
+
+Thus a sufficient scaling condition is
+\begin{equation}
+\varepsilon\sigma_\rho
+\gg
+c_3\sqrt{\frac{B}{N}}
++
+c_4\frac{\sqrt P}{N^{3/2}}.
+\label{eq:cb-condition}
+\end{equation}
+
+The coherent-bigram signal is linear in $\varepsilon$, but the branch
+competitor term is also larger than for magnitude gating.  Which rule performs
+better therefore depends on the finite-$N$ geometry and on the common
+correlation $q_\rho$.
+
+\subsubsection{Effect of corruption distance}
+
+Introduce
+\begin{equation}
+c_\rho
+:=
+|q_\rho|,
+\qquad
+\sigma_\rho
+:=
+\sqrt{1-c_\rho^2}.
+\end{equation}
+
+For the overlap-distance construction,
+\begin{equation}
+c_\rho
+\approx
+1-\rho
+\end{equation}
+is a natural first approximation.
+
+Very small $\rho$ gives
+\begin{equation}
+c_\rho\approx1,
+\qquad
+\sigma_\rho\ll1.
+\end{equation}
+Successive memories are then very similar, so the innovation distinguishing
+branches is weak.
+
+At very large $\rho$, neighboring patterns are easier to separate, but the
+trajectory may also lose useful residual predecessor overlap more rapidly.
+
+The simplest qualitative expectation is therefore that branch resolution is
+controlled not directly by $\rho$ alone, but by a product such as
+\begin{equation}
+\varepsilon(\rho)\sigma_\rho,
+\end{equation}
+where $\varepsilon(\rho)$ measures how much predecessor information survives
+when the trajectory reaches the crossing neighborhood.
+
+A generic branch-resolution condition may consequently be written
+\begin{equation}
+S_{\mathrm{branch}}
+>
+C_{\mathrm{wrong}}
++
+C_{\mathrm{noise}},
+\label{eq:generic-snr-condition}
+\end{equation}
+with
+\begin{equation}
+S_{\mathrm{branch}}
+=
+S_{\mathrm{branch}}
+\left(
+\varepsilon,
+\rho
+\right)
+\end{equation}
+and the noise terms scaling with $B$, $P$, and $N$ as above.
+
+\subsection{Shared segments and context lifetime}
+
+Consider now sequences
+\begin{align}
+p_b
+\rightarrow
+s_1
+\rightarrow
+s_2
+\rightarrow\cdots\rightarrow
+s_L
+\rightarrow
+y_b,
+\qquad b=1,\ldots,B,
+\end{align}
+where
+\begin{equation}
+s_1,\ldots,s_L
+\end{equation}
+are exactly shared.
+
+Let
+\begin{equation}
+r_k
+\end{equation}
+denote the branch-specific residual after traversing $k$ shared patterns.
+
+A simple phenomenological approximation is
+\begin{equation}
+r_{k+1}
+\simeq
+\lambda_k r_k+\zeta_k,
+\end{equation}
+where $|\lambda_k|<1$ represents contraction toward the common shared
+trajectory and $\zeta_k$ denotes finite-size/crosstalk forcing.
+
+If the shared segment is approximately homogeneous,
+\begin{equation}
+\lambda_k\simeq\lambda,
+\end{equation}
+then
+\begin{equation}
+|r_L|
+\simeq
+|\lambda|^L |r_0|
+\end{equation}
+before accounting for accumulated noise.
+
+If the relevant crosstalk threshold is
+\begin{equation}
+r_{\mathrm{crit}}
+\sim
+c_B\sqrt{\frac{B}{N}}
++
+c_P\frac{\sqrt P}{N^{3/2}},
+\end{equation}
+a necessary heuristic condition for residual-context disambiguation is
+\begin{equation}
+|\lambda|^L |r_0|
+\gtrsim
+r_{\mathrm{crit}}.
+\label{eq:context-lifetime}
+\end{equation}
+
+Equivalently,
+\begin{equation}
+L
+\lesssim
+\frac{
+\log(|r_0|/r_{\mathrm{crit}})
+}{
+-\log|\lambda|
+}.
+\label{eq:max-shared-length}
+\end{equation}
+
+This defines an effective context lifetime.
+
+\subsubsection{Why one-step bigram context fails for longer shared segments}
+
+Consider
+\begin{equation}
+p_b
+\rightarrow
+s_1
+\rightarrow
+s_2
+\rightarrow
+y_b.
+\end{equation}
+
+At the transition out of $s_1$, the bigram factor
+\begin{equation}
+|m_{p_b}|^2
+\end{equation}
+is branch-specific.
+
+At the transition out of $s_2$, however, its explicitly indexed lag is
+$s_1$, which is identical across branches:
+\begin{equation}
+A_{y_b}^{\mathrm{B}}
+=
+m_{s_2}|m_{s_1}|^2.
+\end{equation}
+The formal one-step context term is therefore no longer branch-specific.
+
+A bigram may still succeed empirically if the current state has not collapsed
+onto the shared subspace and $m_{s_1}$ itself carries branch-dependent
+contamination.  Such success relies on analog residual dynamics rather than
+explicit access to the unique predecessor.
+
+\subsubsection{Why the coherent trigram can resolve a two-pattern shared segment}
+
+For
+\begin{equation}
+p_b
+\rightarrow
+s_1
+\rightarrow
+s_2
+\rightarrow
+y_b,
+\end{equation}
+the coherent-trigram coefficient at the exit is
+\begin{equation}
+A_{y_b}^{\mathrm{CT}}
+=
+m_{s_2}
+m_{p_b}
+\overline{m_{s_1}}.
+\label{eq:ct-shared-two}
+\end{equation}
+
+Here $s_1$ is shared, but $p_b$ is branch-specific.  Hence the factor
+\begin{equation}
+m_{p_b}
+\end{equation}
+provides an explicit two-step branch cue.
+
+If
+\begin{equation}
+m_{s_2}=O(1),
+\qquad
+m_{s_1}=O(1),
+\qquad
+m_{p_b}=r_2,
+\end{equation}
+then
+\begin{equation}
+S_{\mathrm{CT}}
+\sim
+|r_2|.
+\end{equation}
+
+Thus the coherent trigram naturally matches a shared segment of length two.
+
+For $L>2$, however, the explicitly indexed pattern $\mu-2$ also lies inside
+the shared segment.  The coherent trigram therefore does not provide an
+arbitrarily long discrete context memory.
+
+For a general shared segment of length $L$, an explicitly indexed context rule
+would need access to a lag of at least $L$, or an additional dynamical trace
+whose lifetime satisfies Eq.~\eqref{eq:context-lifetime}.
+
+Within a fixed fourth-order $(2,1)$ polynomial budget, only a limited number of
+lagged overlap factors can appear simultaneously.  This imposes a structural
+constraint on explicit context depth.
+
+\subsection{Reduced overlap dynamics}
+
+The oscillator dynamics admit an exact overlap equation that is useful as a
+starting point for mean-field analysis.
+
+Define the pattern Gram matrix
+\begin{equation}
+G_{\alpha\nu}
+=
+\frac{1}{N}
+\sum_i
+\overline{\xi_i^\alpha}\xi_i^\nu.
+\end{equation}
+
+Also define the state-dependent second-harmonic tensor
+\begin{equation}
+R_{\alpha\nu}(z)
+=
+\frac{1}{N}
+\sum_i
+\overline{\xi_i^\alpha}
+\overline{\xi_i^\nu}
+z_i^2.
+\label{eq:R-definition}
+\end{equation}
+
+Using Eq.~\eqref{eq:z-dynamics},
+\begin{align}
+\dot m_\alpha
+&=
+\frac{1}{N}
+\sum_i
+\overline{\xi_i^\alpha}\dot z_i
+\
+&=
+\frac{g}{2N}
+\sum_i
+\overline{\xi_i^\alpha}
+\left(
+h_i-z_i^2\overline{h_i}
+\right).
+\end{align}
+
+Substituting
+\begin{equation}
+h_i
+=
+\sum_\nu
+\xi_i^\nu A_\nu,
+\end{equation}
+gives the exact identity
+\begin{equation}
+\boxed{
+\dot m_\alpha
+=
+\frac{g}{2}
+\left[
+\sum_\nu
+G_{\alpha\nu}A_\nu
+-
+\sum_\nu
+R_{\alpha\nu}(z)
+\overline{A_\nu}
+\right].
+}
+\label{eq:exact-overlap-dynamics}
+\end{equation}
+
+Equation~\eqref{eq:exact-overlap-dynamics} is exact, but it is not closed in
+the overlaps because $R_{\alpha\nu}(z)$ contains second harmonics of the
+microscopic phase state.
+
+\subsection{Random-pattern mean-field approximation}
+
+For approximately orthogonal random phase patterns,
+\begin{equation}
+G_{\alpha\nu}
+=
+\delta_{\alpha\nu}
++
+O_p(N^{-1/2}).
+\end{equation}
+
+If the state is close to a single pattern $\xi^\gamma$,
+\begin{equation}
+z_i
+\approx
+\xi_i^\gamma,
+\end{equation}
+then
+\begin{equation}
+R_{\alpha\nu}
+\approx
+\frac{1}{N}
+\sum_i
+\overline{\xi_i^\alpha}
+\overline{\xi_i^\nu}
+(\xi_i^\gamma)^2.
+\end{equation}
+
+For independent random phases,
+\begin{equation}
+R_{\gamma\gamma}
+\approx1,
+\end{equation}
+whereas generic combinations
+\begin{equation}
+(\alpha,\nu)\neq(\gamma,\gamma)
+\end{equation}
+are of order
+\begin{equation}
+O_p(N^{-1/2}).
+\end{equation}
+
+Thus, for an overlap $\alpha$ transverse to the currently dominant pattern,
+one obtains the leading approximation
+\begin{equation}
+\dot m_\alpha
+\approx
+\frac{g}{2}A_\alpha
++
+O_p
+\left(
+\frac{|A|}{\sqrt N}
+\right).
+\label{eq:transverse-overlap}
+\end{equation}
+
+This provides a simple interpretation: to leading order, the polynomial
+coefficient multiplying pattern $\xi^\alpha$ is also the driving term for the
+growth of its overlap.
+
+For the dominant pattern itself, the second term in
+Eq.~\eqref{eq:exact-overlap-dynamics} cannot be neglected because
+\begin{equation}
+R_{\gamma\gamma}=O(1).
+\end{equation}
+It supplies the nonlinear phase-normalization effect associated with the
+constraint $|z_i|=1$.
+
+\subsection{Reduced equations for the crossing modes}
+
+Near a crossing, retain only
+\begin{equation}
+x=m_\star,
+\qquad
+r_b=m_{p_b},
+\qquad
+y_b=m_{s_b}.
+\end{equation}
+
+For the Markov rule,
+\begin{equation}
+A_{s_b}
+=
+x|x|^2,
+\end{equation}
+so Eq.~\eqref{eq:transverse-overlap} gives
+\begin{equation}
+\dot y_b
+\approx
+\frac{g}{2}
+x|x|^2
++
+\eta_b^{\mathrm{M1}}.
+\end{equation}
+All candidate successor modes receive the same leading drive.
+
+For the magnitude-gated bigram,
+\begin{equation}
+\dot y_b
+\approx
+\frac{g}{2}
+x|r_b|^2
++
+\eta_b^{\mathrm{B}}.
+\label{eq:reduced-bigram}
+\end{equation}
+
+For the coherent bigram,
+\begin{equation}
+\dot y_b
+\approx
+\frac{g}{2}
+x^2\overline{r_b}
++
+\eta_b^{\mathrm{CB}}.
+\label{eq:reduced-cb}
+\end{equation}
+
+For the coherent trigram, introducing
+\begin{equation}
+q_b=m_{\mu-2}^{(b)},
+\end{equation}
+gives
+\begin{equation}
+\dot y_b
+\approx
+\frac{g}{2}
+x q_b\overline{r_b}
++
+\eta_b^{\mathrm{CT}}.
+\label{eq:reduced-ct}
+\end{equation}
+
+The noise terms summarize Gram-matrix crosstalk, neglected second-harmonic
+terms, and all inactive transitions.
+
+Equations~\eqref{eq:reduced-bigram}–\eqref{eq:reduced-ct} provide a minimal
+reduced dynamical description of branch competition.
+
+\subsection{Branch-contrast equations}
+
+A particularly useful quantity is the difference between the correct successor
+overlap and an incorrect successor overlap:
+\begin{equation}
+\Delta_{bc}
+=
+y_b-y_c.
+\end{equation}
+
+For the Markov rule,
+\begin{equation}
+\dot\Delta_{bc}
+\approx
+\eta_b-\eta_c,
+\end{equation}
+so there is no deterministic leading-order branch signal.
+
+For the magnitude-gated bigram,
+\begin{equation}
+\dot\Delta_{bc}
+\approx
+\frac{g}{2}
+x
+\left(
+|r_b|^2-|r_c|^2
+\right)
++
+\eta_{bc}.
+\label{eq:contrast-bigram}
+\end{equation}
+
+For the coherent bigram,
+\begin{equation}
+\dot\Delta_{bc}
+\approx
+\frac{g}{2}
+x^2
+\left(
+\overline{r_b}
+-
+\overline{r_c}
+\right)
++
+\eta_{bc}.
+\label{eq:contrast-cb}
+\end{equation}
+
+For the coherent trigram,
+\begin{equation}
+\dot\Delta_{bc}
+\approx
+\frac{g}{2}
+x
+\left(
+q_b\overline{r_b}
+-
+q_c\overline{r_c}
+\right)
++
+\eta_{bc}.
+\label{eq:contrast-ct}
+\end{equation}
+
+These equations expose the qualitative distinction between the rules:
+Markov-1 contains no branch contrast; the bigram uses a difference of context
+magnitudes; the coherent bigram uses the complex predecessor overlap itself;
+and the coherent trigram uses a phase-sensitive product of two lagged
+overlaps.
+
+\subsection{A heuristic branch-selection proposition}
+
+\begin{proposition}[Heuristic local branch-selection condition]
+Suppose a crossing neighborhood is entered from branch $b$ and the reduced
+successor dynamics satisfy
+\begin{equation}
+\dot y_b
+=
+S_b+\eta_b,
+\qquad
+\dot y_c
+=
+S_c+\eta_c,
+\end{equation}
+for $c\neq b$.  If, throughout the branch-selection interval,
+\begin{equation}
+\operatorname{Re}
+\left[
+S_b-S_c
+\right]
+>
+\Gamma_{bc},
+\label{eq:branch-sufficient}
+\end{equation}
+where $\Gamma_{bc}$ bounds deterministic crosstalk and stochastic finite-size
+fluctuations in the relevant successor direction, then the correct successor
+overlap develops a positive deterministic advantage over competitor $c$.
+\end{proposition}
+
+This is not yet a theorem guaranteeing global convergence to $s_b$, because
+later nonlinear dynamics may alter the ordering.  It is instead a local
+sufficient condition for the correct successor mode to begin winning the
+competition.
+
+Using the preceding mean-field estimates, Eq.~\eqref{eq:branch-sufficient}
+takes the schematic form
+\begin{equation}
+S_{\mathrm{branch}}
+\gtrsim
+C_{\mathrm{wrong}}
++
+C_{\mathrm{bulk}}
++
+C_{\mathrm{finite}\text{-}N}.
+\end{equation}
+
+\subsection{Predictions for numerical experiments}
+
+The analysis suggests several directly testable finite-size predictions.
+
+\begin{enumerate}
+\item At an artificially reset exact crossing state
+\begin{equation}
+z=\xi^\star,
+\end{equation}
+no deterministic static rule considered here should retain information
+about which branch was previously followed.
+
+\item If trajectories are instead allowed to approach the crossing
+naturally, branch success should correlate with a measurable residual
+contrast such as
+\begin{equation}
+    |m_{p_b}|-|m_{p_c}|
+\end{equation}
+or its complex phase-sensitive analogue.
+\item Increasing $N$ should reduce random overlap crosstalk approximately
+as powers of $N^{-1/2}$, while the deterministic residual signal need not
+vanish with $N$.  Consequently, success should sharpen with increasing
+system size when the residual context remains $O(1)$.
+\item Increasing the number of branches should increase the maximum
+competitor fluctuation roughly with a $\sqrt{B}$ scaling at the simplest
+rms level, with possible logarithmic corrections if one studies the
+maximum over many independent competitors.
+\item Increasing the total number of stored transitions should raise bulk
+crosstalk approximately as $\sqrt P$ under incoherent-sum assumptions.
+\item For shared segments, the branch-specific residual should decay as the
+shared segment length increases.  Plotting the measured residual against
+$L$ should allow an effective contraction factor $\lambda$ to be estimated.
+\item A one-step bigram should deteriorate sharply when the explicit
+predecessor entering its gate becomes a shared state, whereas the coherent
+trigram should remain effective for a two-pattern shared segment because it
+explicitly references the last unique predecessor.
+\item For shared segments longer than the rule's explicit lag depth, any
+remaining success must arise from analog residual contamination of the
+instantaneous state rather than from exact discrete lag indexing.
+
+\end{enumerate}
+
+\subsection{Interpretation}
+
+The analytical picture is therefore a near-crossing, rather than
+exact-crossing, mechanism.
+
+At an exact shared state, autonomous deterministic current-state dynamics
+cannot know the incoming branch.  This yields a structural no-go result that is
+independent of the polynomial order of the static learning rule.
+
+Near the shared state, however, the oscillator trajectory generally retains a
+small branch-dependent residual.  In overlap coordinates this appears as
+\begin{equation}
+m_{p_b}
+=
+\text{common component}
++
+\text{branch-specific residual}
++
+\text{finite-size crosstalk}.
+\end{equation}
+Context-sensitive polynomial rules transform this otherwise small residual
+into a differential drive on the candidate successors.
+
+The Markov-1 rule has no such differential term.  The magnitude-gated bigram
+uses
+\begin{equation}
+|m_{p_b}|^2,
+\end{equation}
+the coherent bigram uses
+\begin{equation}
+\overline{m_{p_b}},
+\end{equation}
+and the coherent trigram uses the phase-sensitive two-lag product
+\begin{equation}
+m_{\mu-2}\overline{m_{\mu-1}}.
+\end{equation}
+
+The resulting branch-selection problem is naturally governed by a
+signal-to-crosstalk inequality
+\begin{equation}
+S_{\mathrm{branch}}
+>
+C_{\mathrm{wrong}}
++
+C_{\mathrm{noise}}.
+\end{equation}
+For random phase patterns, crosstalk decreases with system size, whereas the
+useful signal is controlled primarily by the magnitude and lifetime of the
+residual context.  For a shared segment of length $L$, reliable disambiguation
+requires this residual to remain above the finite-size crosstalk floor until
+the branch point is reached.
+
+This framework explains why a coherent trigram can be the simplest
+interpretable fourth-order rule that succeeds on a two-pattern shared segment:
+it does not evade the exact-state no-go theorem, but it can exploit a
+branch-specific overlap two steps in the past while that information is still
+present in the instantaneous phase configuration.
+
